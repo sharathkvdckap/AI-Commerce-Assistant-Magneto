@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Klizer_VisualSearch::css/visual-search.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Klizer\VisualSearch\Block\Search\Page"
+                   name="klizer.visualsearch.results"
+                   template="Klizer_VisualSearch::search/index.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

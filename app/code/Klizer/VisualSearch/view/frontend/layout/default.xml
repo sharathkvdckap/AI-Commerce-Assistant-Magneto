@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Klizer_VisualSearch::css/visual-search.css"/>
+    </head>
+    <body>
+        <referenceContainer name="header-wrapper">
+            <block class="Klizer\VisualSearch\Block\Camera"
+                   name="klizer.visualsearch.camera"
+                   template="Klizer_VisualSearch::camera.phtml"
+                   after="top.search"/>
+        </referenceContainer>
+    </body>
+</page>

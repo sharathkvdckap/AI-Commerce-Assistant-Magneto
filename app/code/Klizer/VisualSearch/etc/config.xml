@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <klizer_visualsearch>
+            <general>
+                <enabled>0</enabled>
+                <base_url>http://127.0.0.1:4001</base_url>
+                <api_key></api_key>
+                <timeout>60</timeout>
+                <top_k>12</top_k>
+                <default_match_mode>style</default_match_mode>
+                <enable_find_similar>1</enable_find_similar>
+                <enable_header_camera>1</enable_header_camera>
+            </general>
+        </klizer_visualsearch>
+    </default>
+</config>

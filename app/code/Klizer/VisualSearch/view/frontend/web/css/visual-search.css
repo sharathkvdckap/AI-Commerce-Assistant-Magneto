@@ -1,0 +1,416 @@
+/* Phase 2 Visual Search — Luma theme colors + default product grid */
+
+/* ---- Header camera control ---- */
+.klizer-vs-camera {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0 0 8px;
+    vertical-align: middle;
+}
+.klizer-vs-camera.is-loading {
+    opacity: 0.55;
+    pointer-events: none;
+}
+.klizer-vs-camera__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 6px 10px;
+    background: #fff;
+    color: #333;
+    line-height: 1;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+}
+.klizer-vs-camera__btn:hover {
+    border-color: #1979c3;
+    color: #1979c3;
+}
+.klizer-vs-camera__icon {
+    display: block;
+}
+
+/* ---- Page shell ---- */
+.klizer-vs-page {
+    max-width: 100%;
+    margin: 0 auto;
+}
+.klizer-vs-page__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.klizer-vs-close {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #fff;
+    width: 36px;
+    height: 36px;
+    line-height: 1;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+}
+.klizer-vs-close:hover {
+    border-color: #1979c3;
+    color: #1979c3;
+}
+
+.klizer-vs-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666;
+    margin: 20px 0 8px;
+    font-weight: 700;
+}
+.klizer-vs-hint {
+    font-size: 13px;
+    color: #666;
+    margin: 8px 0 16px;
+}
+
+/* ---- Entry dropzone ---- */
+.klizer-vs-hero {
+    border: 1px dashed #ccc;
+    border-radius: 3px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f6f6f6;
+    text-align: center;
+    padding: 32px 16px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+.klizer-vs-hero:hover,
+.klizer-vs-hero.is-dragover {
+    border-color: #1979c3;
+    background: #f0f7fc;
+}
+.klizer-vs-hero__title {
+    font-size: 18px;
+    font-weight: 300;
+    color: #333;
+}
+.klizer-vs-hero__hint {
+    font-size: 13px;
+    color: #666;
+}
+
+/* ---- Chips (match modes + filters) ---- */
+.klizer-vs-modes,
+.klizer-vs-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+.klizer-vs-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 7px 14px;
+    font-size: 13px;
+    background: #fff;
+    cursor: pointer;
+    margin: 0;
+    color: #333;
+    line-height: 1.2;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.klizer-vs-chip:hover {
+    border-color: #1979c3;
+    color: #1979c3;
+}
+.klizer-vs-chip.is-on,
+.klizer-vs-chip:has(input:checked) {
+    background: #1979c3;
+    border-color: #1979c3;
+    color: #fff;
+}
+.klizer-vs-chip--select {
+    padding: 4px 10px;
+}
+.klizer-vs-chip--select select {
+    border: 0;
+    background: transparent;
+    font-size: 13px;
+    max-width: 130px;
+    color: inherit;
+    padding: 3px 18px 3px 4px;
+    cursor: pointer;
+}
+
+/* ---- Crop / region ---- */
+.klizer-vs-crop__preview {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    height: 300px;
+    background: #f6f6f6;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.klizer-vs-crop__img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+}
+.klizer-vs-crop__box {
+    position: absolute;
+    border: 2px dashed #1979c3;
+    background: rgba(25, 121, 195, 0.12);
+    cursor: move;
+    min-width: 40px;
+    min-height: 40px;
+}
+.klizer-vs-crop__handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #1979c3;
+    border-radius: 2px;
+}
+.klizer-vs-crop__handle--tl {
+    top: -6px;
+    left: -6px;
+    cursor: nwse-resize;
+}
+.klizer-vs-crop__handle--br {
+    bottom: -6px;
+    right: -6px;
+    cursor: nwse-resize;
+}
+.klizer-vs-crop__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+.klizer-vs-crop__actions .action {
+    flex: 1;
+    min-width: 160px;
+    text-align: center;
+}
+
+/* ---- Query summary + low confidence ---- */
+.klizer-vs-query {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: #fff;
+}
+.klizer-vs-query__thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #f6f6f6;
+}
+.klizer-vs-query__text {
+    font-size: 14px;
+    color: #333;
+}
+.klizer-vs-lowconf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 12px 0;
+}
+.klizer-vs-lowconf__link {
+    margin-left: 6px;
+    color: #1979c3;
+    text-decoration: underline;
+}
+
+/* ---- Status + score ---- */
+.klizer-vs-status {
+    margin: 8px 0 12px;
+    font-size: 13px;
+    color: #333;
+}
+.klizer-vs-status.is-error {
+    color: #e02b27;
+}
+.klizer-vs-score {
+    margin-top: 4px;
+    color: #666;
+    font-size: 12px;
+}
+
+/*
+ * Results use Magento's default product-item markup so the grid inherits Luma
+ * catalog styling. We only fix image sizing (the image helper normally injects
+ * inline width / padding-bottom which our AJAX markup does not have).
+ */
+.klizer-vs-results .product-image-container {
+    width: 100%;
+}
+.klizer-vs-results .product-image-wrapper {
+    height: auto;
+    padding-bottom: 0 !important;
+}
+.klizer-vs-results .product-image-photo {
+    position: static;
+    width: 100%;
+    height: auto;
+}
+
+/* ---- PDP "Visually similar" carousel ---- */
+.klizer-vs-carousel {
+    position: relative;
+    padding: 0 34px;
+}
+.klizer-vs-carousel__track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+}
+.klizer-vs-carousel__track::-webkit-scrollbar {
+    display: none;
+}
+.klizer-vs-carousel__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    background: #fff;
+    color: #333;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+.klizer-vs-carousel__nav:hover:not(:disabled) {
+    border-color: #1979c3;
+    color: #1979c3;
+}
+.klizer-vs-carousel__nav:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+.klizer-vs-carousel__nav--prev {
+    left: 0;
+}
+.klizer-vs-carousel__nav--next {
+    right: 0;
+}
+
+.klizer-vs-scard {
+    flex: 0 0 auto;
+    width: 150px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    padding: 8px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.klizer-vs-scard:hover {
+    text-decoration: none;
+    color: #333;
+    border-color: #1979c3;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+}
+.klizer-vs-scard__img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    margin-bottom: 8px;
+    background: #f6f6f6;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.klizer-vs-scard__img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.klizer-vs-scard__name {
+    font-size: 13px;
+    line-height: 1.3;
+    min-height: 34px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+.klizer-vs-scard__price {
+    font-weight: 700;
+    font-size: 14px;
+}
+.klizer-vs-scard__score {
+    color: #666;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+/* ---- PDP Find similar ---- */
+.klizer-vs-similar {
+    margin-top: 20px;
+    clear: both;
+    padding-top: 16px;
+    border-top: 1px solid #ccc;
+}
+.klizer-vs-similar__hint {
+    font-size: 12px;
+    color: #666;
+    margin: 8px 0 0;
+}
+.klizer-vs-similar__strip {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #ccc;
+}
+.klizer-vs-similar__title {
+    margin: 0 0 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.page-header .header.content .klizer-vs-camera {
+    align-self: center;
+}

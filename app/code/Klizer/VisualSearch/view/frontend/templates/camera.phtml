@@ -1,0 +1,25 @@
+<?php
+/** @var \Klizer\VisualSearch\Block\Camera $block */
+if (!$block->isEnabled()) {
+    return;
+}
+?>
+<div class="klizer-vs-camera"
+     data-mage-init='{"Klizer_VisualSearch/js/camera": {
+         "uploadUrl": "<?= $block->escapeUrl($block->getUploadUrl()) ?>",
+         "resultsUrl": "<?= $block->escapeUrl($block->getResultsPageUrl()) ?>",
+         "matchMode": "<?= $block->escapeJs($block->getDefaultMatchMode()) ?>"
+     }}'>
+    <label class="klizer-vs-camera__btn" title="<?= $block->escapeHtmlAttr(__('Search by image')) ?>">
+        <svg class="klizer-vs-camera__icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M9 3L7.17 5H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.17L15 3H9zm3 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2.2A2.8 2.8 0 1 0 12 8.2a2.8 2.8 0 0 0 0 5.6z"/>
+        </svg>
+        <span class="klizer-vs-camera__label"><?= $block->escapeHtml(__('Image')) ?></span>
+        <input type="file"
+               accept="image/*"
+               capture="environment"
+               class="klizer-vs-camera__input"
+               aria-label="<?= $block->escapeHtmlAttr(__('Upload image for visual search')) ?>"
+               hidden />
+    </label>
+</div>

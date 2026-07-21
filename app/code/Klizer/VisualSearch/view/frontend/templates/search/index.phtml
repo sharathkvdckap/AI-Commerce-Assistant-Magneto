@@ -1,0 +1,135 @@
+<?php
+/** @var \Klizer\VisualSearch\Block\Search\Page $block */
+if (!$block->isEnabled()) {
+    return;
+}
+$defaultMode = $block->getDefaultMatchMode();
+?>
+<div class="klizer-vs-page"
+     data-mage-init='{"Klizer_VisualSearch/js/search-page": {
+         "uploadUrl": "<?= $block->escapeUrl($block->getUploadUrl()) ?>",
+         "textSearchUrl": "<?= $block->escapeUrl($block->getTextSearchUrl()) ?>",
+         "matchMode": "<?= $block->escapeJs($defaultMode) ?>"
+     }}'>
+
+    <div class="klizer-vs-page__header">
+        <h1 class="page-title"><span class="base"><?= $block->escapeHtml(__('Search by Image')) ?></span></h1>
+        <button type="button" class="klizer-vs-close action" hidden aria-label="<?= $block->escapeHtmlAttr(__('Clear results')) ?>">✕</button>
+    </div>
+
+    <!-- Entry: dropzone (wireframe §1) -->
+    <div class="klizer-vs-stage" data-role="stage">
+        <div class="klizer-vs-hero" data-role="dropzone">
+            <strong class="klizer-vs-hero__title"><?= $block->escapeHtml(__('Drop image here')) ?></strong>
+            <span class="klizer-vs-hero__hint"><?= $block->escapeHtml(__('or tap to upload / take photo')) ?></span>
+            <button type="button" class="action primary klizer-vs-hero__upload">
+                <?= $block->escapeHtml(__('Upload Image')) ?>
+            </button>
+            <input type="file" accept="image/*" capture="environment" class="klizer-vs-file" hidden />
+        </div>
+
+        <p class="klizer-vs-label"><?= $block->escapeHtml(__('How should we match?')) ?></p>
+        <div class="klizer-vs-modes" role="group" aria-label="<?= $block->escapeHtmlAttr(__('Match mode')) ?>">
+            <?php foreach ($block->getMatchModes() as $mode): ?>
+                <label class="klizer-vs-chip <?= $mode['value'] === $defaultMode ? 'is-on' : '' ?>">
+                    <input type="radio"
+                           name="matchMode"
+                           value="<?= $block->escapeHtmlAttr($mode['value']) ?>"
+                           <?= $mode['value'] === $defaultMode ? 'checked' : '' ?>
+                           hidden />
+                    <span><?= $block->escapeHtml($mode['label']) ?></span>
+                </label>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Crop / region (wireframe §3) -->
+    <div class="klizer-vs-crop" data-role="crop" hidden>
+        <p class="klizer-vs-label"><?= $block->escapeHtml(__('Select what to search')) ?></p>
+        <div class="klizer-vs-crop__preview" data-role="crop-preview">
+            <img class="klizer-vs-crop__img" data-role="crop-img" alt="" />
+            <div class="klizer-vs-crop__box" data-role="crop-box">
+                <span class="klizer-vs-crop__handle klizer-vs-crop__handle--tl" data-handle="tl"></span>
+                <span class="klizer-vs-crop__handle klizer-vs-crop__handle--br" data-handle="br"></span>
+            </div>
+        </div>
+        <p class="klizer-vs-hint"><?= $block->escapeHtml(__('Tip: drag corners to focus on the product')) ?></p>
+        <div class="klizer-vs-crop__actions">
+            <button type="button" class="action primary" data-role="search-crop">
+                <?= $block->escapeHtml(__('Search this area')) ?>
+            </button>
+            <button type="button" class="action secondary" data-role="search-full">
+                <?= $block->escapeHtml(__('Use full image')) ?>
+            </button>
+        </div>
+    </div>
+
+    <!-- Hybrid results (wireframe §2 + §5) -->
+    <div class="klizer-vs-results-panel" data-role="results-panel" hidden>
+        <div class="klizer-vs-query">
+            <img class="klizer-vs-query__thumb" data-role="query-thumb" alt="" />
+            <span class="klizer-vs-query__text"><?= $block->escapeHtml(__('Showing matches for your photo')) ?></span>
+        </div>
+
+        <div class="klizer-vs-lowconf message notice" data-role="lowconf" hidden>
+            <div>
+                <?= $block->escapeHtml(__('Try another photo or use text search')) ?>
+                <a class="klizer-vs-lowconf__link" data-role="text-search" href="<?= $block->escapeUrl($block->getTextSearchUrl()) ?>">
+                    <?= $block->escapeHtml(__('Text search')) ?>
+                </a>
+            </div>
+            <button type="button" class="action secondary" data-role="try-again">
+                <?= $block->escapeHtml(__('Try another photo')) ?>
+            </button>
+        </div>
+
+        <p class="klizer-vs-label"><?= $block->escapeHtml(__('Refine (Magento filters)')) ?></p>
+        <div class="klizer-vs-filters" data-role="filters">
+            <button type="button" class="klizer-vs-chip is-on" data-filter="instock" aria-pressed="true">
+                <?= $block->escapeHtml(__('In stock')) ?>
+            </button>
+            <label class="klizer-vs-chip klizer-vs-chip--select">
+                <span><?= $block->escapeHtml(__('Category')) ?></span>
+                <select data-filter-select="category">
+                    <option value=""><?= $block->escapeHtml(__('All')) ?></option>
+                </select>
+            </label>
+            <label class="klizer-vs-chip klizer-vs-chip--select">
+                <span><?= $block->escapeHtml(__('Price')) ?></span>
+                <select data-filter-select="price">
+                    <option value=""><?= $block->escapeHtml(__('All')) ?></option>
+                    <option value="0-50"><?= $block->escapeHtml(__('Under $50')) ?></option>
+                    <option value="50-100"><?= $block->escapeHtml(__('$50 – $100')) ?></option>
+                    <option value="100-200"><?= $block->escapeHtml(__('$100 – $200')) ?></option>
+                    <option value="200-"><?= $block->escapeHtml(__('$200+')) ?></option>
+                </select>
+            </label>
+            <label class="klizer-vs-chip klizer-vs-chip--select">
+                <span><?= $block->escapeHtml(__('Brand')) ?></span>
+                <select data-filter-select="brand">
+                    <option value=""><?= $block->escapeHtml(__('All')) ?></option>
+                </select>
+            </label>
+            <label class="klizer-vs-chip klizer-vs-chip--select">
+                <span><?= $block->escapeHtml(__('Size')) ?></span>
+                <select data-filter-select="size">
+                    <option value=""><?= $block->escapeHtml(__('All')) ?></option>
+                </select>
+            </label>
+        </div>
+
+        <p class="klizer-vs-label"><?= $block->escapeHtml(__('Match mode')) ?></p>
+        <div class="klizer-vs-modes klizer-vs-modes--results" role="group">
+            <?php foreach ($block->getMatchModes() as $mode): ?>
+                <button type="button"
+                        class="klizer-vs-chip <?= $mode['value'] === $defaultMode ? 'is-on' : '' ?>"
+                        data-mode="<?= $block->escapeHtmlAttr($mode['value']) ?>">
+                    <?= $block->escapeHtml($mode['label']) ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+
+        <p class="klizer-vs-status" data-role="status" hidden></p>
+        <div class="klizer-vs-results products wrapper grid products-grid" data-role="results"></div>
+    </div>
+</div>
