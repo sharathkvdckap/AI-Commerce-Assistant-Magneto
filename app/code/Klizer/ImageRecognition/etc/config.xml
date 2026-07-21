@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store/etc/config.xsd">
+    <default>
+        <imagerecognition>
+            <general>
+                <enabled>1</enabled>
+                <max_file_size>5</max_file_size>
+                <allowed_extensions>jpg,jpeg,png,gif,webp</allowed_extensions>
+                <service_base_url>http://127.0.0.1:4001</service_base_url>
+                <api_key></api_key>
+                <request_timeout_seconds>60</request_timeout_seconds>
+                <search_top_k>120</search_top_k>
+                <min_similarity>0.5</min_similarity>
+            </general>
+        </imagerecognition>
+    </default>
+</config>

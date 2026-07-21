@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Klizer_ImageRecognition::css/image-search.css"/>
+    </head>
+    <body>
+        <referenceBlock name="top.search">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Klizer_ImageRecognition::search/form.mini.phtml</argument>
+            </action>
+            <arguments>
+                <argument name="image_search_config" xsi:type="object">Klizer\ImageRecognition\ViewModel\SearchConfig</argument>
+            </arguments>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="image.recognition.upload"
+                   as="imageRecognitionUpload"
+                   template="Klizer_ImageRecognition::search/image-upload.phtml"
+                   before="-">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Klizer\ImageRecognition\ViewModel\SearchConfig</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

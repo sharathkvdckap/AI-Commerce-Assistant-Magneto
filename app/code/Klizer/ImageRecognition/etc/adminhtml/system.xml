@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config/etc/system_file.xsd">
+    <system>
+        <tab id="klizer" translate="label" sortOrder="400">
+            <label>Klizer</label>
+        </tab>
+        <section id="imagerecognition" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Image Recognition Search</label>
+            <tab>klizer</tab>
+            <resource>Klizer_ImageRecognition::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable Image Search</label>
+                    <comment>Show image upload control in the storefront search bar.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="max_file_size" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Max Upload Size (MB)</label>
+                    <comment>Maximum image file size allowed for upload.</comment>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="allowed_extensions" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Allowed Extensions</label>
+                    <comment>Comma-separated list (e.g. jpg,jpeg,png,gif,webp).</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="service_base_url" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Service Base URL</label>
+                    <comment>Base URL of the Node CLIP service (e.g. http://127.0.0.1:4001).</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="api_key" translate="label comment" type="obscure" sortOrder="50"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>API Key</label>
+                    <comment>Value of SERVICE_API_KEY from the Node service .env. Sent as the x-api-key header.</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="request_timeout_seconds" translate="label comment" type="text" sortOrder="60"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Request Timeout (Seconds)</label>
+                    <comment>HTTP timeout when calling the CLIP search/index APIs.</comment>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="search_top_k" translate="label comment" type="text" sortOrder="70"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Search Top K</label>
+                    <comment>Maximum similar products fetched from CLIP in one search. Storefront pagination (12/24/36/48 per page) uses this full result set for total count and page links.</comment>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="min_similarity" translate="label comment" type="text" sortOrder="80"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Minimum Similarity</label>
+                    <comment>Cosine similarity threshold between 0 and 1. Matches at or below this score are hidden (e.g. 0.5 = 50%).</comment>
+                    <validate>validate-number</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

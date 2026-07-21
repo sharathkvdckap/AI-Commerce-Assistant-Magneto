@@ -85,5 +85,14 @@ return [
     ],
     'install' => [
         'date' => 'Thu, 16 Jul 2026 13:15:43 +0000'
+    ],
+    'system' => [
+        'default' => [
+            'imagerecognition' => [
+                'general' => [
+                    'api_key' => '0:3:P1hj3OZk0p/REYgbT9U5HAZNM598payMgKLkFw4HDw6N1BDLUVfd4QhOk7gGlCMRjfBLbeRKnyVoK5HWYy0bF3ijv9OGlN2MVVmpUA=='
+                ]
+            ]
+        ]
     ]
 ];
