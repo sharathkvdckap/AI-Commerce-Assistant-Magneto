@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store/etc/config.xsd">
+    <default>
+        <aicommerceassistant>
+            <general>
+                <enabled>1</enabled>
+                <assistant_url>http://localhost:5173/ai-assistant</assistant_url>
+                <redirect_catalog_search>1</redirect_catalog_search>
+            </general>
+        </aicommerceassistant>
+    </default>
+</config>

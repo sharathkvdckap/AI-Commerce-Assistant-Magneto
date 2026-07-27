@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config/etc/system_file.xsd">
+    <system>
+        <tab id="klizer" translate="label" sortOrder="400">
+            <label>Klizer</label>
+        </tab>
+        <section id="aicommerceassistant" translate="label" sortOrder="140"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>AI Commerce Assistant</label>
+            <tab>klizer</tab>
+            <resource>Klizer_AiCommerceAssistant::config</resource>
+            <group id="general" translate="label" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable AI Search Redirect</label>
+                    <comment>When enabled, the storefront search bar submits to the AI Commerce Assistant instead of Magento catalog search.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="assistant_url" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Assistant URL</label>
+                    <comment>Full URL of the AI assistant page (no trailing slash). Example: http://localhost:5173/ai-assistant or https://ai.example.com/ai-assistant. The search query is appended as ?q=...</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="redirect_catalog_search" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Redirect Magento Search Results Page</label>
+                    <comment>Also redirect /catalogsearch/result/?q=... to the AI assistant (covers direct links and autocomplete).</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
