@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ *
+ * Applied only when AI embed mode is on (see ReplaceCatalogSearchLayout observer).
+ * Hides Magento's default catalog search PLP and uses a full-width AI search page.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="klizer-ai-search-page"/>
+
+        <!-- Remove Magento default keyword search results + layered nav -->
+        <referenceBlock name="search.result" remove="true"/>
+        <referenceBlock name="catalogsearch.leftnav" remove="true"/>
+        <referenceBlock name="catalog.leftnav" remove="true"/>
+        <referenceBlock name="sidebar.main" remove="true"/>
+        <referenceBlock name="div.sidebar.main" remove="true"/>
+
+        <!-- Replace default "Search results for..." title -->
+        <referenceBlock name="page.main.title" remove="true"/>
+
+        <referenceContainer name="content">
+            <block class="Klizer\AiCommerceAssistant\Block\Result\Assistant"
+                   name="klizer.aicommerceassistant.result"
+                   template="Klizer_AiCommerceAssistant::result/assistant.phtml"
+                   before="-"/>
+        </referenceContainer>
+    </body>
+</page>

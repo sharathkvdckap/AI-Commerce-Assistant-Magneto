@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="layout_load_before">
+        <observer name="klizer_aicommerceassistant_replace_catalog_search"
+                  instance="Klizer\AiCommerceAssistant\Observer\ReplaceCatalogSearchLayout"/>
+    </event>
+</config>

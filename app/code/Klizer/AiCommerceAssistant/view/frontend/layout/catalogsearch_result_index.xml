@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ *
+ * Base catalog search layout: load AI assets when module is enabled.
+ * Default Magento PLP is removed by aicommerceassistant_catalogsearch_replace
+ * when embed mode is active.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Klizer_AiCommerceAssistant::css/assistant.css"
+             ifconfig="aicommerceassistant/general/enabled"/>
+    </head>
+</page>

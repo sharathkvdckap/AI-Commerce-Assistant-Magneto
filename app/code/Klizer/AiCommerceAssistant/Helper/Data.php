@@ -12,6 +12,8 @@ use Magento\Store\Model\ScopeInterface;
 class Data extends AbstractHelper
 {
     private const XML_PATH_ENABLED = 'aicommerceassistant/general/enabled';
+    private const XML_PATH_API_BASE_URL = 'aicommerceassistant/general/api_base_url';
+    private const XML_PATH_TIMEOUT = 'aicommerceassistant/general/timeout';
     private const XML_PATH_ASSISTANT_URL = 'aicommerceassistant/general/assistant_url';
     private const XML_PATH_REDIRECT_CATALOG_SEARCH = 'aicommerceassistant/general/redirect_catalog_search';
 
@@ -24,17 +26,33 @@ class Data extends AbstractHelper
         );
     }
 
-    public function isCatalogSearchRedirectEnabled(?int $storeId = null): bool
+    /**
+     * AI Commerce Assistant Node API (e.g. http://127.0.0.1:3001).
+     */
+    public function getApiBaseUrl(?int $storeId = null): string
     {
-        return $this->scopeConfig->isSetFlag(
-            self::XML_PATH_REDIRECT_CATALOG_SEARCH,
+        $url = trim((string) $this->scopeConfig->getValue(
+            self::XML_PATH_API_BASE_URL,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        ));
+
+        return $url !== '' ? rtrim($url, '/') : '';
+    }
+
+    public function getTimeout(?int $storeId = null): int
+    {
+        $timeout = (int) $this->scopeConfig->getValue(
+            self::XML_PATH_TIMEOUT,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
+
+        return $timeout > 0 ? $timeout : 90;
     }
 
     /**
-     * Base assistant URL without query string or trailing slash.
+     * Legacy external React UI URL. Only used when redirect mode is enabled.
      */
     public function getAssistantUrl(?int $storeId = null): string
     {
@@ -44,16 +62,18 @@ class Data extends AbstractHelper
             $storeId
         ));
 
-        if ($url === '') {
-            return '';
-        }
-
-        return rtrim($url, '/');
+        return $url !== '' ? rtrim($url, '/') : '';
     }
 
-    /**
-     * Build full assistant URL, optionally with ?q=.
-     */
+    public function isCatalogSearchRedirectEnabled(?int $storeId = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_REDIRECT_CATALOG_SEARCH,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
     public function buildAssistantUrl(?string $query = null, ?int $storeId = null): string
     {
         $base = $this->getAssistantUrl($storeId);
@@ -71,8 +91,23 @@ class Data extends AbstractHelper
         return $base . $separator . 'q=' . rawurlencode($query);
     }
 
+    /**
+     * External :5173 redirect is opt-in only. Default is Magento PLP embed.
+     */
     public function shouldRedirectSearch(?int $storeId = null): bool
     {
-        return $this->isEnabled($storeId) && $this->getAssistantUrl($storeId) !== '';
+        return $this->isEnabled($storeId)
+            && $this->isCatalogSearchRedirectEnabled($storeId)
+            && $this->getAssistantUrl($storeId) !== '';
+    }
+
+    /**
+     * Embed AI search experience and hide Magento's default catalog search PLP.
+     */
+    public function shouldEmbedOnSearchResults(?int $storeId = null): bool
+    {
+        return $this->isEnabled($storeId)
+            && !$this->shouldRedirectSearch($storeId)
+            && $this->getApiBaseUrl($storeId) !== '';
     }
 }

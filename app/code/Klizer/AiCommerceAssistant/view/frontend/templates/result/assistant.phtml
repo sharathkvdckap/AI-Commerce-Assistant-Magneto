@@ -1,0 +1,167 @@
+<?php
+/**
+ * Copyright © Klizer. All rights reserved.
+ *
+ * @var \Klizer\AiCommerceAssistant\Block\Result\Assistant $block
+ */
+if (!$block->isEnabled()) {
+    return;
+}
+$query = $block->getQueryText();
+?>
+<div class="klizer-ai-assistant klizer-ai-assistant--page"
+     data-mage-init='{"Klizer_AiCommerceAssistant/js/assistant": {
+         "startUrl": "<?= $block->escapeUrl($block->getStartUrl()) ?>",
+         "messageUrl": "<?= $block->escapeUrl($block->getMessageUrl()) ?>",
+         "query": "<?= $block->escapeJs($query) ?>",
+         "pageSize": 0
+     }}'>
+
+    <header class="klizer-ai-assistant__header">
+        <p class="klizer-ai-assistant__eyebrow"><?= $block->escapeHtml(__('AI Commerce Assistant')) ?></p>
+        <h1 class="klizer-ai-assistant__heading">
+            <?= $block->escapeHtml(__('Find the right products')) ?>
+        </h1>
+        <p class="klizer-ai-assistant__subhead">
+            <?= $block->escapeHtml(__('Tell us what you need — we ask a few smart follow-ups, then search the Magento catalog.')) ?>
+        </p>
+    </header>
+
+    <?php if ($query !== ''): ?>
+        <div class="klizer-ai-assistant__querybar">
+            <span class="klizer-ai-assistant__querylabel"><?= $block->escapeHtml(__('Your search')) ?></span>
+            <strong class="klizer-ai-assistant__querytext"><?= $block->escapeHtml($query) ?></strong>
+        </div>
+    <?php endif; ?>
+
+    <div class="klizer-ai-assistant__status" data-role="status" hidden></div>
+
+    <!-- Goal Detected -->
+    <div class="klizer-ai-goal" data-role="goal" hidden>
+        <div class="klizer-ai-goal__badge">
+            <span class="klizer-ai-goal__icon" aria-hidden="true">◎</span>
+            <?= $block->escapeHtml(__('Goal Detected')) ?>
+        </div>
+        <h2 class="klizer-ai-goal__title" data-role="goal-title"></h2>
+        <p class="klizer-ai-goal__summary" data-role="goal-summary" hidden></p>
+        <div class="klizer-ai-goal__tags" data-role="goal-tags"></div>
+    </div>
+
+    <!-- Clarifying question -->
+    <div class="klizer-ai-clarify" data-role="clarify" hidden>
+        <p class="klizer-ai-clarify__message" data-role="clarify-message"></p>
+        <div class="klizer-ai-clarify__options" data-role="clarify-options"></div>
+        <div class="klizer-ai-clarify__free">
+            <input type="text"
+                   class="input-text"
+                   data-role="clarify-input"
+                   placeholder="<?= $block->escapeHtmlAttr(__('Or type your answer...')) ?>" />
+            <button type="button" class="action primary" data-role="clarify-send">
+                <?= $block->escapeHtml(__('Send')) ?>
+            </button>
+        </div>
+    </div>
+
+    <!-- Budget filter (when products are ready) -->
+    <div class="klizer-ai-budget" data-role="budget" hidden>
+        <label class="klizer-ai-budget__label">
+            <?= $block->escapeHtml(__('Budget')) ?>
+            <span data-role="budget-value"><?= $block->escapeHtml(__('All prices')) ?></span>
+        </label>
+        <input type="range"
+               class="klizer-ai-budget__slider"
+               data-role="budget-slider"
+               min="0"
+               max="0"
+               step="10"
+               value="0" />
+    </div>
+
+    <!-- Matchable products + Alternatives carousel -->
+    <div class="klizer-ai-products" data-role="products" hidden>
+        <div class="klizer-ai-matchable" data-role="matchable-section">
+            <div class="klizer-ai-products__head">
+                <h3 class="klizer-ai-products__title"><?= $block->escapeHtml(__('Matchable products')) ?></h3>
+                <p class="klizer-ai-products__count" data-role="products-count" hidden></p>
+            </div>
+
+            <p class="klizer-ai-products__banner klizer-ai-products__banner--match"
+               data-role="matchable-banner" hidden></p>
+            <p class="klizer-ai-products__banner klizer-ai-products__banner--warn"
+               data-role="no-exact-banner" hidden>
+                <?= $block->escapeHtml(__('No exact match found. Showing the closest alternatives below.')) ?>
+            </p>
+
+            <div class="klizer-ai-toolbar" data-role="toolbar" hidden>
+                <div class="klizer-ai-toolbar__modes">
+                    <span class="klizer-ai-toolbar__label"><?= $block->escapeHtml(__('View as')) ?></span>
+                    <div class="klizer-ai-toolbar__mode-btns" role="group" aria-label="<?= $block->escapeHtmlAttr(__('View as')) ?>">
+                        <button type="button"
+                                class="klizer-ai-mode is-active"
+                                data-role="mode-grid"
+                                title="<?= $block->escapeHtmlAttr(__('Grid')) ?>">
+                            <?= $block->escapeHtml(__('Grid')) ?>
+                        </button>
+                        <button type="button"
+                                class="klizer-ai-mode"
+                                data-role="mode-list"
+                                title="<?= $block->escapeHtmlAttr(__('List')) ?>">
+                            <?= $block->escapeHtml(__('List')) ?>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="klizer-ai-toolbar__sorter">
+                    <label class="klizer-ai-toolbar__label" for="klizer-ai-sorter">
+                        <?= $block->escapeHtml(__('Sort By')) ?>
+                    </label>
+                    <select id="klizer-ai-sorter" class="klizer-ai-sorter" data-role="sorter">
+                        <option value="relevance"><?= $block->escapeHtml(__('Relevance')) ?></option>
+                        <option value="name_asc"><?= $block->escapeHtml(__('Product Name')) ?></option>
+                        <option value="price_asc"><?= $block->escapeHtml(__('Price: Low to High')) ?></option>
+                        <option value="price_desc"><?= $block->escapeHtml(__('Price: High to Low')) ?></option>
+                    </select>
+                </div>
+
+                <div class="klizer-ai-toolbar__amount" data-role="toolbar-amount"></div>
+            </div>
+
+            <div class="klizer-ai-products__grid products wrapper grid products-grid"
+                 data-role="products-grid"
+                 data-view="grid"></div>
+
+            <div class="klizer-ai-pages" data-role="pagination" hidden>
+                <strong class="klizer-ai-pages__label" id="klizer-ai-paging-label">
+                    <?= $block->escapeHtml(__('Page')) ?>
+                </strong>
+                <ul class="klizer-ai-pages__items" data-role="pagination-items" aria-labelledby="klizer-ai-paging-label"></ul>
+            </div>
+        </div>
+
+        <div class="klizer-ai-alternatives" data-role="alternatives-section" hidden>
+            <div class="klizer-ai-alternatives__divider" aria-hidden="true">
+                <span><?= $block->escapeHtml(__('You may also like')) ?></span>
+            </div>
+            <div class="klizer-ai-products__head">
+                <h3 class="klizer-ai-products__title"><?= $block->escapeHtml(__('Alternative recommendations')) ?></h3>
+                <p class="klizer-ai-products__count" data-role="alternatives-count" hidden></p>
+            </div>
+            <p class="klizer-ai-products__banner klizer-ai-products__banner--alt">
+                <?= $block->escapeHtml(__('Close alternatives if the exact match isn’t quite right.')) ?>
+            </p>
+            <div class="klizer-ai-carousel" data-role="alternatives-carousel">
+                <button type="button"
+                        class="klizer-ai-carousel__nav klizer-ai-carousel__nav--prev"
+                        data-role="alt-prev"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Previous alternatives')) ?>">‹</button>
+                <div class="klizer-ai-carousel__viewport" data-role="alt-viewport">
+                    <ol class="klizer-ai-carousel__track" data-role="alternatives-track"></ol>
+                </div>
+                <button type="button"
+                        class="klizer-ai-carousel__nav klizer-ai-carousel__nav--next"
+                        data-role="alt-next"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Next alternatives')) ?>">›</button>
+            </div>
+        </div>
+    </div>
+</div>

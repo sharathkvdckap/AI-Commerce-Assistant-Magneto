@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wireframes — Matchable Products + Alternatives</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #666;
+      --line: #d8d8d8;
+      --paper: #f6f6f4;
+      --white: #fff;
+      --accent: #5b4cdb;
+      --accent-soft: #f0eefc;
+      --alt: #0f766e;
+      --alt-soft: #ecfdf8;
+      --warn: #9a3412;
+      --warn-soft: #fff7ed;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background: #eaeae6;
+      line-height: 1.45;
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .lede { color: var(--muted); margin: 0 0 28px; max-width: 720px; }
+    .note {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+    .note strong { color: var(--accent); }
+    h2 {
+      font-size: 18px;
+      margin: 36px 0 8px;
+      padding-top: 8px;
+      border-top: 1px solid #ccc;
+    }
+    h2:first-of-type { border-top: 0; padding-top: 0; }
+    .opt-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .pill-rec { background: var(--accent-soft); color: var(--accent); }
+    .pill-easy { background: #ecfdf3; color: #166534; }
+    .pill-med { background: #fff7ed; color: #9a3412; }
+
+    /* Wireframe chrome */
+    .wf {
+      background: var(--paper);
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+    .wf-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 12px;
+    }
+    .bar {
+      height: 28px;
+      background: #ddd;
+      border: 1px dashed #999;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 11px;
+      color: #666;
+    }
+    .goal {
+      border: 1px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+    .goal b { color: var(--accent); }
+    .section-h {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 16px 0 8px;
+    }
+    .section-h h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .section-h span { font-size: 11px; color: var(--muted); }
+    .banner {
+      font-size: 12px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      border: 1px solid;
+    }
+    .banner-match {
+      background: var(--accent-soft);
+      border-color: #c4bdf5;
+      color: #3b2fa0;
+    }
+    .banner-alt {
+      background: var(--alt-soft);
+      border-color: #99f6e4;
+      color: #115e59;
+    }
+    .banner-warn {
+      background: var(--warn-soft);
+      border-color: #fed7aa;
+      color: var(--warn);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .card {
+      background: var(--white);
+      border: 1px solid #bbb;
+      min-height: 120px;
+      padding: 8px;
+      font-size: 11px;
+      position: relative;
+    }
+    .card .img {
+      height: 56px;
+      background: #e4e4e0;
+      border: 1px dashed #aaa;
+      margin-bottom: 6px;
+    }
+    .card .name { font-weight: 700; margin-bottom: 2px; }
+    .card .price { color: var(--muted); }
+    .badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      background: var(--accent);
+      color: #fff;
+    }
+    .badge-alt {
+      background: var(--alt);
+    }
+    .strip {
+      display: flex;
+      gap: 10px;
+      overflow: hidden;
+    }
+    .strip .card { flex: 0 0 140px; min-height: 100px; }
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid #bbb;
+      margin-bottom: 12px;
+    }
+    .tab {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #bbb;
+      border-bottom: none;
+      background: #e8e8e4;
+      color: #666;
+      margin-right: 4px;
+    }
+    .tab.on {
+      background: var(--white);
+      color: var(--ink);
+      position: relative;
+      top: 2px;
+      border-bottom: 2px solid var(--white);
+    }
+    .cols {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 14px;
+    }
+    .divider {
+      border: none;
+      border-top: 2px dashed #999;
+      margin: 18px 0 8px;
+    }
+    .divider-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--alt);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: -4px 0 12px;
+    }
+    .pros {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+    .pros li { margin-bottom: 4px; }
+    .decision {
+      background: var(--white);
+      border: 2px solid var(--accent);
+      padding: 16px;
+      margin-top: 36px;
+    }
+    .decision h2 { margin: 0 0 10px; border: 0; padding: 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: var(--white);
+      margin: 12px 0 24px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f0f0ec; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+    code {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      background: #f0f0ec;
+      padding: 1px 5px;
+    }
+    @media (max-width: 720px) {
+      .grid, .grid-2, .cols { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Matchable Products + Alternatives</h1>
+    <p class="lede">
+      Wireframes only — no implementation yet. Goal: split AI search results into
+      <strong>Matchable products</strong> (best intent fit) and
+      <strong>Alternative recommendations</strong> (compatible / broader options).
+    </p>
+
+    <div class="note">
+      <strong>Feasibility:</strong> Yes. The AI service already knows
+      <code>matchType: exact | recommended | none</code>, but today it returns
+      <em>either</em> exact matches <em>or</em> a recommended fallback — never both in one response.
+      To show two sections at once, we need a small API change to return
+      <code>products</code> + <code>alternatives</code> together. Magento UI then renders two blocks.
+    </div>
+
+    <h2>Data split (backend)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Bucket</th>
+          <th>Meaning</th>
+          <th>Source today</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Matchable products</strong></td>
+          <td>Precise catalog hits for the detected goal / filters</td>
+          <td><code>matchType: "exact"</code> → <code>products[]</code></td>
+        </tr>
+        <tr>
+          <td><strong>Alternatives</strong></td>
+          <td>Broader / compatible options when exact is thin, OOS, or user asked for alternatives</td>
+          <td><code>matchType: "recommended"</code> path (broad search) — currently replaces exact list</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="pros">Proposed API shape (after approval):</p>
+    <pre style="background:#fff;border:1px solid #ccc;padding:12px;font-size:12px;overflow:auto;">{
+{
+  "matchType": "exact" | "recommended" | "mixed" | "none",
+  "products": [ /* matchable */ ],
+  "alternatives": [ /* compatible / broader */ ],
+  "summary": "…"
+}</pre>
+
+    <!-- ========== OPTION A ========== -->
+    <h2>Option A — Stacked + Alternatives carousel (APPROVED)</h2>
+    <div class="opt-meta">
+      <span class="pill pill-rec">Approved</span>
+      <span class="pill pill-easy">Building now</span>
+      <span>Matchable grid on top · Alternatives carousel below divider</span>
+    </div>
+    <p class="pros">
+      Matchable on top (3-col grid + toolbar). Below a divider:
+      <strong>Alternative recommendations as a horizontal carousel</strong> (prev/next + scroll).
+      Hide empty section.
+    </p>
+
+    <div class="wf">
+      <div class="wf-label">Desktop wireframe · Option A (approved)</div>
+      <div class="bar">AI Commerce Assistant · Your search: “blue yoga pants for women under $50”</div>
+      <div class="goal"><b>Goal Detected</b> — blue yoga pants for women under $50</div>
+
+      <div class="section-h">
+        <h3>Matchable products</h3>
+        <span>3 products · best intent fit</span>
+      </div>
+      <div class="banner banner-match">Best matches for “blue yoga pants for women under $50”.</div>
+      <div class="grid">
+        <div class="card"><span class="badge">Best Match</span><div class="img"></div><div class="name">Blue yoga pant · women</div><div class="price">$48.00</div></div>
+        <div class="card"><span class="badge">Best Value</span><div class="img"></div><div class="name">Blue yoga pant · under $50</div><div class="price">$39.00</div></div>
+        <div class="card"><div class="img"></div><div class="name">Blue yoga pant · high-waisted</div><div class="price">$44.00</div></div>
+      </div>
+
+      <hr class="divider" />
+      <div class="divider-label">You may also like</div>
+
+      <div class="section-h">
+        <h3>Alternative recommendations</h3>
+        <span>carousel · compatible / related</span>
+      </div>
+      <div class="banner banner-alt">Close alternatives if the exact match isn’t quite right.</div>
+      <div class="strip" style="align-items:stretch">
+        <div style="flex:0 0 28px;align-self:center;border:1px solid #999;background:#fff;text-align:center;line-height:56px;font-weight:700">‹</div>
+        <div class="card"><span class="badge badge-alt">Alt</span><div class="img"></div><div class="name">Blue yoga short</div><div class="price">$29.00</div></div>
+        <div class="card"><div class="img"></div><div class="name">Navy yoga pant</div><div class="price">$42.00</div></div>
+        <div class="card"><div class="img"></div><div class="name">Blue capri pant</div><div class="price">$36.00</div></div>
+        <div class="card"><div class="img"></div><div class="name">Teal yoga pant</div><div class="price">$41.00</div></div>
+        <div style="flex:0 0 28px;align-self:center;border:1px solid #999;background:#fff;text-align:center;line-height:56px;font-weight:700">›</div>
+      </div>
+    </div>
+
+    <div class="wf">
+      <div class="wf-label">Empty / fallback · only alternatives carousel</div>
+      <div class="banner banner-warn">No exact match — showing the closest alternatives.</div>
+      <div class="section-h"><h3>Alternative recommendations</h3><span>carousel</span></div>
+      <div class="strip">
+        <div class="card"><div class="img"></div><div class="name">Alt product</div><div class="price">$••</div></div>
+        <div class="card"><div class="img"></div><div class="name">Alt product</div><div class="price">$••</div></div>
+        <div class="card"><div class="img"></div><div class="name">Alt product</div><div class="price">$••</div></div>
+      </div>
+    </div>
+
+    <!-- ========== OPTION B ========== -->
+    <h2>Option B — Tabs</h2>
+    <div class="opt-meta">
+      <span class="pill pill-med">Medium</span>
+      <span>Compact above the fold · hides one list until clicked</span>
+    </div>
+    <p class="pros">Good when both lists are long. Risk: users may never open Alternatives.</p>
+
+    <div class="wf">
+      <div class="wf-label">Desktop wireframe · Option B</div>
+      <div class="bar">AI Commerce Assistant · results</div>
+      <div class="goal"><b>Goal Detected</b> — …</div>
+      <div class="tabs">
+        <div class="tab on">Matchable (3)</div>
+        <div class="tab">Alternatives (4)</div>
+      </div>
+      <div class="banner banner-match">Best intent fit for your goal.</div>
+      <div class="grid">
+        <div class="card"><span class="badge">Best Match</span><div class="img"></div><div class="name">Product A</div><div class="price">$54</div></div>
+        <div class="card"><div class="img"></div><div class="name">Product B</div><div class="price">$49</div></div>
+        <div class="card"><div class="img"></div><div class="name">Product C</div><div class="price">$92</div></div>
+      </div>
+    </div>
+
+    <!-- ========== OPTION C ========== -->
+    <h2>Option C — Primary grid + alternatives strip</h2>
+    <div class="opt-meta">
+      <span class="pill pill-med">Medium</span>
+      <span>Matchable owns the page · Alternatives as secondary carousel</span>
+    </div>
+    <p class="pros">Strong merchandising hierarchy. Horizontal strip is less scannable on desktop than a full grid.</p>
+
+    <div class="wf">
+      <div class="wf-label">Desktop wireframe · Option C</div>
+      <div class="bar">AI Commerce Assistant · results</div>
+      <div class="goal"><b>Goal Detected</b> — …</div>
+      <div class="section-h"><h3>Matchable products</h3><span>3 products</span></div>
+      <div class="grid">
+        <div class="card"><span class="badge">Best Match</span><div class="img"></div><div class="name">Product A</div><div class="price">$54</div></div>
+        <div class="card"><div class="img"></div><div class="name">Product B</div><div class="price">$49</div></div>
+        <div class="card"><div class="img"></div><div class="name">Product C</div><div class="price">$92</div></div>
+      </div>
+      <div class="section-h" style="margin-top:20px"><h3>Alternative recommendations</h3><span>scroll →</span></div>
+      <div class="banner banner-alt">Related picks if you want more options.</div>
+      <div class="strip">
+        <div class="card"><span class="badge badge-alt">Alt</span><div class="img"></div><div class="name">Alt 1</div><div class="price">$45</div></div>
+        <div class="card"><div class="img"></div><div class="name">Alt 2</div><div class="price">$32</div></div>
+        <div class="card"><div class="img"></div><div class="name">Alt 3</div><div class="price">$24</div></div>
+        <div class="card"><div class="img"></div><div class="name">Alt 4</div><div class="price">$68</div></div>
+      </div>
+    </div>
+
+    <!-- ========== STATES ========== -->
+    <h2>When each section shows</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th>Matchable</th>
+          <th>Alternatives</th>
+          <th>UI note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Strong exact hits</td>
+          <td>Show</td>
+          <td>Optional (related / accessories)</td>
+          <td>Both sections if API returns both</td>
+        </tr>
+        <tr>
+          <td>Exact empty, broad hits</td>
+          <td>Hide</td>
+          <td>Show</td>
+          <td>Warn banner: “No exact match — closest alternatives”</td>
+        </tr>
+        <tr>
+          <td>User chose “Compatible alternative”</td>
+          <td>Thin / hide</td>
+          <td>Primary</td>
+          <td>Promote Alternatives section title</td>
+        </tr>
+        <tr>
+          <td>Nothing found</td>
+          <td>Hide</td>
+          <td>Hide</td>
+          <td>Existing empty + clarify message</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="decision">
+      <h2>Approved decision</h2>
+      <ol style="margin:0;padding-left:18px;font-size:14px">
+        <li><strong>Layout:</strong> Option A — stacked. Matchable grid on top; Alternatives as a <strong>carousel</strong> below the divider.</li>
+        <li><strong>Labels:</strong> “Matchable products” / “Alternative recommendations”.</li>
+        <li><strong>API:</strong> Return <code>products</code> + <code>alternatives</code> in one response.</li>
+      </ol>
+    </div>
+  </div>
+</body>
+</html>

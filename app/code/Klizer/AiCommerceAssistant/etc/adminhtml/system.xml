@@ -5,7 +5,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config/etc/system_file.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="klizer" translate="label" sortOrder="400">
             <label>Klizer</label>
@@ -20,25 +20,41 @@
                 <label>General</label>
                 <field id="enabled" translate="label comment" type="select" sortOrder="10"
                        showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Enable AI Search Redirect</label>
-                    <comment>When enabled, the storefront search bar submits to the AI Commerce Assistant instead of Magento catalog search.</comment>
+                    <label>Enable AI Commerce Assistant</label>
+                    <comment>When Yes, Magento's default catalog search results page is replaced with the AI search experience (questions + Magento product recommendations).</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="assistant_url" translate="label comment" type="text" sortOrder="20"
-                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Assistant URL</label>
-                    <comment>Full URL of the AI assistant page (no trailing slash). Example: http://localhost:5173/ai-assistant or https://ai.example.com/ai-assistant. The search query is appended as ?q=...</comment>
+                <field id="api_base_url" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>AI API Base URL</label>
+                    <comment>Node assistant API (no trailing slash). Example: http://127.0.0.1:3001</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="timeout" translate="label" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>HTTP Timeout (seconds)</label>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
-                <field id="redirect_catalog_search" translate="label comment" type="select" sortOrder="30"
+                <field id="redirect_catalog_search" translate="label comment" type="select" sortOrder="40"
                        showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Redirect Magento Search Results Page</label>
-                    <comment>Also redirect /catalogsearch/result/?q=... to the AI assistant (covers direct links and autocomplete).</comment>
+                    <label>Redirect to External Assistant UI (legacy)</label>
+                    <comment>OFF = replace Magento catalog search with the on-site AI page (recommended). ON = redirect to External Assistant URL (e.g. localhost:5173).</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="assistant_url" translate="label comment" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>External Assistant URL (legacy)</label>
+                    <comment>Only used when Redirect is ON. Example: http://localhost:5173/ai-assistant</comment>
+                    <depends>
+                        <field id="redirect_catalog_search">1</field>
                     </depends>
                 </field>
             </group>

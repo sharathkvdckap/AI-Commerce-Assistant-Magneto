@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wireframes — AI Commerce Assistant: Query → Results</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #666;
+      --line: #d8d8d8;
+      --paper: #f6f6f4;
+      --white: #fff;
+      --accent: #5b4cdb;
+      --accent-soft: #f0eefc;
+      --alt: #0f766e;
+      --alt-soft: #ecfdf8;
+      --warn: #9a3412;
+      --warn-soft: #fff7ed;
+      --step: #1d4ed8;
+      --step-soft: #eff6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background: #eaeae6;
+      line-height: 1.45;
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .lede { color: var(--muted); margin: 0 0 28px; max-width: 760px; }
+    .note {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+    .note strong { color: var(--accent); }
+    .toc {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+    .toc ol { margin: 8px 0 0; padding-left: 20px; }
+    .toc a { color: var(--accent); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    h2 {
+      font-size: 18px;
+      margin: 40px 0 10px;
+      padding-top: 12px;
+      border-top: 1px solid #ccc;
+      scroll-margin-top: 16px;
+    }
+    h2:first-of-type { border-top: 0; padding-top: 0; }
+    h3 { font-size: 15px; margin: 18px 0 8px; }
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .pill-now { background: #ecfdf3; color: #166534; }
+    .pill-next { background: var(--accent-soft); color: var(--accent); }
+    .pill-ex { background: var(--step-soft); color: var(--step); }
+
+    /* Flow diagram */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 8px;
+      margin: 16px 0 20px;
+    }
+    .flow-box {
+      flex: 1 1 140px;
+      background: var(--white);
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 12px;
+      min-width: 120px;
+    }
+    .flow-box .n {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .flow-box strong { display: block; margin-bottom: 4px; font-size: 13px; }
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      color: #999;
+      font-size: 18px;
+      flex: 0 0 auto;
+      padding: 0 2px;
+    }
+    .arch {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    .arch-box {
+      background: var(--white);
+      border: 2px solid #bbb;
+      border-radius: 6px;
+      padding: 14px;
+      text-align: center;
+    }
+    .arch-box.magento { border-color: var(--accent); background: var(--accent-soft); }
+    .arch-box.ai { border-color: var(--alt); background: var(--alt-soft); }
+    .arch-arr { text-align: center; color: #888; font-size: 20px; }
+
+    /* Wireframe chrome */
+    .wf {
+      background: var(--paper);
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .wf-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 12px;
+    }
+    .bar {
+      height: 28px;
+      background: #ddd;
+      border: 1px dashed #999;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 11px;
+      color: #666;
+    }
+    .search-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .search-input {
+      flex: 1;
+      background: var(--white);
+      border: 1px solid #999;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--ink);
+    }
+    .search-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .callout {
+      border: 1px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 10px 12px;
+      margin: 10px 0 14px;
+      font-size: 12px;
+    }
+    .callout b { color: var(--accent); }
+    .callout-alt {
+      border-color: #99f6e4;
+      background: var(--alt-soft);
+    }
+    .callout-alt b { color: var(--alt); }
+    .callout-warn {
+      border-color: #fed7aa;
+      background: var(--warn-soft);
+    }
+    .callout-warn b { color: var(--warn); }
+    .callout-step {
+      border-color: #93c5fd;
+      background: var(--step-soft);
+    }
+    .callout-step b { color: var(--step); }
+
+    .goal {
+      border: 1px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .goal .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .goal h4 { margin: 0 0 6px; font-size: 15px; }
+    .goal .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11px;
+      background: var(--white);
+      border: 1px solid #c4bdf5;
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #3b2fa0;
+    }
+
+    .clarify-q {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 12px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .chip {
+      background: var(--white);
+      border: 1px solid #999;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: default;
+    }
+    .chip.picked {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      box-shadow: 0 0 0 2px #c4bdf5;
+    }
+    .free-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .free-row input {
+      flex: 1;
+      border: 1px solid #999;
+      padding: 8px 10px;
+      font-size: 12px;
+      background: var(--white);
+    }
+    .free-row button {
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .card {
+      background: var(--white);
+      border: 1px solid #bbb;
+      min-height: 120px;
+      padding: 8px;
+      font-size: 11px;
+      position: relative;
+    }
+    .card .img {
+      height: 56px;
+      background: #e4e4e0;
+      border: 1px dashed #aaa;
+      margin-bottom: 6px;
+    }
+    .card .name { font-weight: 700; margin-bottom: 2px; }
+    .card .price { color: var(--muted); }
+    .card .why { color: #555; font-size: 10px; margin-top: 4px; font-style: italic; }
+    .badge-card {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      background: var(--accent);
+      color: #fff;
+    }
+    .badge-value { background: #0f766e; }
+    .badge-alt { background: #64748b; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--white);
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: #555;
+    }
+    .budget {
+      background: var(--white);
+      border: 1px solid #ccc;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .budget-track {
+      height: 6px;
+      background: #ddd;
+      border-radius: 3px;
+      margin-top: 8px;
+      position: relative;
+    }
+    .budget-track::after {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 70%;
+      background: var(--accent);
+      border-radius: 3px;
+    }
+
+    .steps-list {
+      margin: 0 0 16px;
+      padding: 0;
+      list-style: none;
+      counter-reset: s;
+    }
+    .steps-list li {
+      position: relative;
+      padding: 10px 12px 10px 48px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      margin-bottom: 8px;
+      font-size: 13px;
+      counter-increment: s;
+    }
+    .steps-list li::before {
+      content: counter(s);
+      position: absolute;
+      left: 12px;
+      top: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 24px;
+      text-align: center;
+    }
+    .steps-list li strong { display: block; margin-bottom: 2px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: var(--white);
+      margin: 12px 0 20px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f0f0ec;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    code {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      background: #f0f0ec;
+      padding: 1px 5px;
+    }
+    pre {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 12px;
+      font-size: 12px;
+      overflow: auto;
+      margin: 8px 0 16px;
+    }
+    .ex-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .ex-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 14px;
+      font-size: 13px;
+    }
+    .ex-card .q {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+    .ex-card .label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #888;
+      margin: 10px 0 4px;
+    }
+    .divider {
+      border: none;
+      border-top: 2px dashed #999;
+      margin: 18px 0 8px;
+    }
+    .divider-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--alt);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: -4px 0 12px;
+    }
+    .decision {
+      background: var(--white);
+      border: 2px solid var(--accent);
+      padding: 16px;
+      margin-top: 36px;
+    }
+    .decision h2 { margin: 0 0 10px; border: 0; padding: 0; }
+    .status {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 720px) {
+      .grid, .ex-grid, .two-col, .arch { grid-template-columns: 1fr; }
+      .arch { gap: 6px; }
+      .flow-arrow, .arch-arr { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>AI Commerce Assistant — Query → Results Flow</h1>
+    <p class="lede">
+      Manager walkthrough: how a shopper’s search becomes an AI-guided conversation,
+      then Magento catalog products. Wireframes below show <strong>what the shopper sees</strong>
+      and <strong>how AI suggestions appear</strong>, with concrete examples.
+    </p>
+
+    <div class="note">
+      <strong>Status today:</strong>
+      Search results page is replaced by the AI assistant when the module is enabled.
+      Flow is live end-to-end: query → clarifying questions → product grid
+      (Best Match / Best Value, budget slider, sort, grid/list).
+      <span class="pill pill-next" style="margin-left:6px">Next</span>
+      Matchable + Alternatives split (see separate wireframe).
+    </div>
+
+    <nav class="toc">
+      <strong>Contents</strong>
+      <ol>
+        <li><a href="#how">How it works (system)</a></li>
+        <li><a href="#journey">Shopper journey (step by step)</a></li>
+        <li><a href="#screens">Screen wireframes with examples</a></li>
+        <li><a href="#suggestions">How AI suggestions should show</a></li>
+        <li><a href="#examples">Example query → expected UI</a></li>
+        <li><a href="#results">Results layout (what we build next)</a></li>
+      </ol>
+    </nav>
+
+    <!-- ========== 1. HOW IT WORKS ========== -->
+    <h2 id="how">1. How it works (system)</h2>
+    <p style="font-size:14px;color:var(--muted);margin:0 0 12px">
+      Shopper never talks to the AI server directly. Magento proxies every call
+      (keeps API URL / keys server-side).
+    </p>
+
+    <div class="arch">
+      <div class="arch-box">
+        <strong>Shopper browser</strong>
+        Search box → AI result page<br />
+        <code>assistant.js</code>
+      </div>
+      <div class="arch-arr">→</div>
+      <div class="arch-box magento">
+        <strong>Magento</strong>
+        <code>/aicommerceassistant/ajax/start</code><br />
+        <code>/aicommerceassistant/ajax/message</code>
+      </div>
+      <div class="arch-arr">→</div>
+      <div class="arch-box ai">
+        <strong>AI service</strong>
+        <code>/api/assistant/start</code><br />
+        <code>/api/assistant/message</code>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-box">
+        <div class="n">Step 1</div>
+        <strong>Type query</strong>
+        Normal Magento search (e.g. “blue yoga pants for women under $50”)
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">
+        <div class="n">Step 2</div>
+        <strong>AI result page</strong>
+        Default PLP replaced; session starts with query
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">
+        <div class="n">Step 3</div>
+        <strong>AI asks / searches</strong>
+        <code>ask_question</code> or <code>search_products</code>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">
+        <div class="n">Step 4</div>
+        <strong>Show products</strong>
+        Goal + chips answered → Matching Products grid
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>AI action</th>
+          <th>Meaning</th>
+          <th>What UI shows</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ask_question</code></td>
+          <td>Need more intent (length, fit, size…)</td>
+          <td>Goal Detected + clarifying question + suggestion chips + free-text</td>
+        </tr>
+        <tr>
+          <td><code>search_products</code></td>
+          <td>Enough context — search Magento catalog</td>
+          <td>Goal + summary + Matching Products (badges, budget, sort, view)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ========== 2. JOURNEY ========== -->
+    <h2 id="journey">2. Shopper journey (step by step)</h2>
+    <ol class="steps-list">
+      <li>
+        <strong>Search</strong>
+        Shopper enters a natural-language query in the Magento header search and submits.
+      </li>
+      <li>
+        <strong>Land on AI page</strong>
+        Instead of classic keyword PLP, they see “AI Commerce Assistant” with “Your search” echoed.
+        Page auto-calls <code>start</code> with that query.
+      </li>
+      <li>
+        <strong>Goal Detected</strong>
+        Goal title echoes the shopper query (“blue yoga pants for women under $50”).
+        Filter tags update as the shopper answers follow-ups.
+      </li>
+      <li>
+        <strong>AI suggestions (clarify)</strong>
+        If intent is unclear, AI asks one focused question with clickable chips
+        (and optional free text). Each answer continues the same session.
+      </li>
+      <li>
+        <strong>Results</strong>
+        When ready, AI returns ranked products. UI shows Best Match / Best Value,
+        budget slider, sort, grid/list — still on the same page (no reload).
+      </li>
+    </ol>
+
+    <!-- ========== 3. SCREENS ========== -->
+    <h2 id="screens">3. Screen wireframes with examples</h2>
+    <p style="font-size:13px;margin:0 0 8px">
+      Example thread used below:
+      <span class="pill pill-ex">Query</span>
+      <em>“blue yoga pants for women under $50”</em>
+    </p>
+
+    <!-- Screen 0 -->
+    <h3>Screen 0 — Magento search (entry)</h3>
+    <div class="wf">
+      <div class="wf-label">Header search · before AI page</div>
+      <div class="bar">Logo · Nav · Cart</div>
+      <div class="search-bar">
+        <div class="search-input">blue yoga pants for women under $50</div>
+        <div class="search-btn">Search</div>
+      </div>
+      <div class="callout-step callout">
+        <b>What happens:</b> Submit goes to catalog search URL with <code>q=…</code>.
+        Module swaps layout to AI assistant page (embed mode).
+      </div>
+    </div>
+
+    <!-- Screen 1 -->
+    <h3>Screen 1 — Loading / thinking</h3>
+    <div class="wf">
+      <div class="wf-label">AI page · just landed</div>
+      <div class="bar">AI Commerce Assistant</div>
+      <p style="margin:0 0 8px;font-size:16px;font-weight:700">Find the right products</p>
+      <p style="margin:0 0 12px;font-size:12px;color:#666">Tell us what you need — we ask a few smart follow-ups, then search the Magento catalog.</p>
+      <div style="background:#fff;border:1px solid #ccc;padding:8px 12px;margin-bottom:12px;font-size:12px">
+        Your search · <strong>blue yoga pants for women under $50</strong>
+      </div>
+      <div class="status">Thinking…</div>
+      <div class="callout">
+        <b>Behind the scenes:</b> POST Magento <code>ajax/start</code> → AI <code>/api/assistant/start</code>
+        with <code>{ "query": "blue yoga pants for women under $50" }</code>. Returns <code>sessionId</code> + first action.
+      </div>
+    </div>
+
+    <!-- Screen 2 -->
+    <h3>Screen 2 — Goal + first AI suggestion (clarify)</h3>
+    <div class="wf">
+      <div class="wf-label">Desktop wireframe · ask_question</div>
+      <div class="bar">AI Commerce Assistant · results page</div>
+      <div style="background:#fff;border:1px solid #ccc;padding:8px 12px;margin-bottom:12px;font-size:12px">
+        Your search · <strong>blue yoga pants for women under $50</strong>
+      </div>
+
+      <div class="goal">
+        <div class="badge">◎ Goal Detected</div>
+        <h4>blue yoga pants for women under $50</h4>
+        <div class="tags">
+          <span class="tag">✓ Blue</span>
+          <span class="tag">✓ Yoga pants</span>
+          <span class="tag">✓ Women</span>
+          <span class="tag">✓ Under $50</span>
+        </div>
+      </div>
+
+      <p class="clarify-q">What length are you looking for?</p>
+      <div class="chips">
+        <span class="chip">Full length</span>
+        <span class="chip">Capri</span>
+        <span class="chip">Shorts</span>
+        <span class="chip">No preference</span>
+      </div>
+      <div class="free-row">
+        <input type="text" placeholder="Or type your answer..." disabled />
+        <button type="button">Send</button>
+      </div>
+
+      <div class="callout callout-alt" style="margin-top:14px">
+        <b>AI suggestion pattern:</b> One clear question + 3–5 short chips + free text.
+        Chips are the primary path (fast). Free text for edge cases (“high-waisted, size M”).
+      </div>
+    </div>
+
+    <!-- Screen 3 -->
+    <h3>Screen 3 — Second clarify (optional, same page)</h3>
+    <div class="wf">
+      <div class="wf-label">After chip “Full length” · still ask_question</div>
+      <div class="goal">
+        <div class="badge">◎ Goal Detected</div>
+        <h4>blue yoga pants for women under $50</h4>
+        <div class="tags">
+          <span class="tag">✓ Blue</span>
+          <span class="tag">✓ Yoga pants</span>
+          <span class="tag">✓ Women</span>
+          <span class="tag">✓ Full length</span>
+          <span class="tag">✓ Under $50</span>
+        </div>
+      </div>
+      <p class="clarify-q">Any fit preference?</p>
+      <div class="chips">
+        <span class="chip picked">High-waisted</span>
+        <span class="chip">Regular</span>
+        <span class="chip">Loose</span>
+        <span class="chip">No preference</span>
+      </div>
+      <div class="callout-step callout">
+        <b>Session continues:</b> POST <code>ajax/message</code> with
+        <code>{ sessionId, answer: "High-waisted" }</code>. Goal tags accumulate; question swaps in place.
+      </div>
+    </div>
+
+    <!-- Screen 4 -->
+    <h3>Screen 4 — Results (Matching Products)</h3>
+    <div class="wf">
+      <div class="wf-label">Desktop wireframe · search_products</div>
+      <div class="bar">AI Commerce Assistant · results</div>
+      <div style="background:#fff;border:1px solid #ccc;padding:8px 12px;margin-bottom:12px;font-size:12px">
+        Your search · <strong>blue yoga pants for women under $50</strong>
+      </div>
+
+      <div class="goal">
+        <div class="badge">◎ Goal Detected</div>
+        <h4>blue yoga pants for women under $50</h4>
+        <p style="margin:0 0 8px;font-size:12px;color:#444">
+          Here are matches for “blue yoga pants for women under $50” — high-waisted styles ranked first.
+        </p>
+        <div class="tags">
+          <span class="tag">✓ Blue</span>
+          <span class="tag">✓ Yoga pants</span>
+          <span class="tag">✓ Women</span>
+          <span class="tag">✓ High-waisted</span>
+          <span class="tag">✓ Under $50</span>
+        </div>
+      </div>
+
+      <div class="budget">
+        <strong>Budget</strong> · <span style="color:#666">All prices</span>
+        <div class="budget-track"></div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+        <strong style="font-size:14px">Matching Products</strong>
+        <span style="font-size:11px;color:#666">6 products</span>
+      </div>
+      <div class="toolbar">
+        <span>View as · <strong>Grid</strong> · List</span>
+        <span>Sort By · Relevance ▾</span>
+        <span>Items 1-6 of 6</span>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <span class="badge-card">Best Match</span>
+          <div class="img"></div>
+          <div class="name">Blue yoga pant · women</div>
+          <div class="price">$48.00</div>
+          <div class="why">Why: blue · yoga pants · under $50</div>
+        </div>
+        <div class="card">
+          <span class="badge-card badge-value">Best Value</span>
+          <div class="img"></div>
+          <div class="name">Blue yoga pant · under $50</div>
+          <div class="price">$39.00</div>
+          <div class="why">Why: blue · high-waisted · in budget</div>
+        </div>
+        <div class="card">
+          <div class="img"></div>
+          <div class="name">Blue yoga pant · high-waisted</div>
+          <div class="price">$44.00</div>
+          <div class="why">Why: women · under $50</div>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:14px">
+        <b>Built today:</b> First product = Best Match, second = Best Value (when sort = Relevance).
+        Budget slider filters client-side. Sort &amp; grid/list without another AI call.
+      </div>
+    </div>
+
+    <!-- ========== 4. SUGGESTIONS ========== -->
+    <h2 id="suggestions">4. How AI suggestions should show</h2>
+    <p style="font-size:14px;color:var(--muted)">
+      “Suggestions” = clarifying chips + optional free text while refining intent —
+      not a separate chat bubble UI. Keep it PLP-like and scannable.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Element</th>
+          <th>Rule</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Question copy</strong></td>
+          <td>One question at a time. Short, shopper language.</td>
+          <td>“What length are you looking for?”</td>
+        </tr>
+        <tr>
+          <td><strong>Chips</strong></td>
+          <td>3–5 options. Mutually clear. Last option can be soft (“No preference”).</td>
+          <td>Full length · Capri · Shorts · No preference</td>
+        </tr>
+        <tr>
+          <td><strong>Free text</strong></td>
+          <td>Always available under chips for nuance.</td>
+          <td>“High-waisted, size M”</td>
+        </tr>
+        <tr>
+          <td><strong>Goal tags</strong></td>
+          <td>Update after every answer so shopper sees “AI understood me”.</td>
+          <td>✓ Blue · ✓ Yoga pants · ✓ Under $50</td>
+        </tr>
+        <tr>
+          <td><strong>Product badges</strong></td>
+          <td>Only on AI relevance order (page 1).</td>
+          <td>Best Match, Best Value</td>
+        </tr>
+        <tr>
+          <td><strong>Why line (optional)</strong></td>
+          <td>Short reason from AI (<code>reasons[]</code>) — builds trust.</td>
+          <td>“blue · full length · in budget”</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="two-col">
+      <div class="wf">
+        <div class="wf-label">Do · suggestion UI</div>
+        <p class="clarify-q">What length are you looking for?</p>
+        <div class="chips">
+          <span class="chip">Full length</span>
+          <span class="chip">Capri</span>
+          <span class="chip">Shorts</span>
+          <span class="chip">No preference</span>
+        </div>
+        <div class="callout callout-alt"><b>Good:</b> Fast tap, clear choices, one intent.</div>
+      </div>
+      <div class="wf">
+        <div class="wf-label">Don’t · suggestion UI</div>
+        <p class="clarify-q" style="color:#666">Please describe in detail your complete requirements including brand, color, size, material, occasion, and shipping constraints…</p>
+        <div class="chips">
+          <span class="chip">Option A with a very long label that wraps awkwardly</span>
+          <span class="chip">Option B</span>
+          <span class="chip">Option C</span>
+          <span class="chip">Option D</span>
+          <span class="chip">Option E</span>
+          <span class="chip">Option F</span>
+          <span class="chip">Option G</span>
+        </div>
+        <div class="callout callout-warn"><b>Avoid:</b> Essay questions, 7+ chips, jargon.</div>
+      </div>
+    </div>
+
+    <!-- ========== 5. EXAMPLES ========== -->
+    <h2 id="examples">5. Example query → expected UI</h2>
+    <p style="font-size:13px;margin:0 0 12px;color:var(--muted)">
+      Primary demo query used throughout this doc (goal title = query text, not a rebuilt category name):
+    </p>
+
+    <div class="ex-grid">
+      <div class="ex-card">
+        <div class="q">“blue yoga pants for women under $50”</div>
+        <div class="label">Goal title (shown as-is)</div>
+        blue yoga pants for women under $50
+        <div class="label">Likely path</div>
+        Ask length → maybe fit → products.
+        <div class="label">Goal tags</div>
+        ✓ Blue · ✓ Yoga pants · ✓ Women · ✓ Under $50 · (+ Full length after chip)
+        <div class="label">Suggestion example</div>
+        “What length?” → Full length · Capri · Shorts · No preference
+      </div>
+      <div class="ex-card">
+        <div class="q">Same query · after “High-waisted”</div>
+        <div class="label">Goal title (unchanged)</div>
+        blue yoga pants for women under $50
+        <div class="label">Goal tags</div>
+        ✓ Blue · ✓ Yoga pants · ✓ Women · ✓ High-waisted · ✓ Under $50
+        <div class="label">Results</div>
+        Matching Products for this query (Best Match / Best Value)
+      </div>
+      <div class="ex-card">
+        <div class="q">Same query · weak catalog match</div>
+        <div class="label">Goal title (unchanged)</div>
+        blue yoga pants for women under $50
+        <div class="label">UI</div>
+        Empty / alternatives banner — still keyed to this query, not another product name
+      </div>
+    </div>
+
+    <h3>Empty / weak match</h3>
+    <div class="wf">
+      <div class="wf-label">Fallback messaging · same query</div>
+      <div class="goal">
+        <div class="badge">◎ Goal Detected</div>
+        <h4>blue yoga pants for women under $50</h4>
+        <div class="tags">
+          <span class="tag">✓ Blue</span>
+          <span class="tag">✓ Yoga pants</span>
+          <span class="tag">✓ Women</span>
+          <span class="tag">✓ Under $50</span>
+        </div>
+      </div>
+      <div class="callout callout-warn">
+        <b>No matching products found</b> for “blue yoga pants for women under $50”.
+        Try refining your answer — or raise budget.
+      </div>
+      <p style="font-size:12px;color:#666;margin:0">
+        (Planned: show <em>Alternative recommendations</em> instead of a dead end — see next section.)
+      </p>
+    </div>
+
+    <!-- ========== 6. NEXT ========== -->
+    <h2 id="results">6. Results layout — what we’re building next</h2>
+    <p style="font-size:14px;margin:0 0 12px">
+      <span class="pill pill-now">Approved</span>
+      Stacked: <strong>Matchable</strong> grid + <strong>Alternatives</strong> carousel below divider.
+    </p>
+
+    <div class="wf">
+      <div class="wf-label">Approved results · stacked + alternatives carousel</div>
+      <div class="bar">AI Commerce Assistant · Your search: “blue yoga pants for women under $50”</div>
+      <div class="goal">
+        <div class="badge">◎ Goal Detected</div>
+        <h4>blue yoga pants for women under $50</h4>
+        <div class="tags" style="margin-top:8px">
+          <span class="tag">✓ Blue</span>
+          <span class="tag">✓ Yoga pants</span>
+          <span class="tag">✓ Women</span>
+          <span class="tag">✓ High-waisted</span>
+          <span class="tag">✓ Under $50</span>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;margin:12px 0 6px">
+        <strong style="font-size:14px">Matchable products</strong>
+        <span style="font-size:11px;color:#666">3 · best intent fit</span>
+      </div>
+      <div class="callout" style="margin-bottom:10px">Best matches for “blue yoga pants for women under $50”.</div>
+      <div class="grid">
+        <div class="card"><span class="badge-card">Best Match</span><div class="img"></div><div class="name">Blue yoga pant · women</div><div class="price">$48.00</div></div>
+        <div class="card"><span class="badge-card badge-value">Best Value</span><div class="img"></div><div class="name">Blue yoga pant · under $50</div><div class="price">$39.00</div></div>
+        <div class="card"><div class="img"></div><div class="name">Blue yoga pant · high-waisted</div><div class="price">$44.00</div></div>
+      </div>
+
+      <hr class="divider" />
+      <div class="divider-label">You may also like</div>
+
+      <div style="display:flex;justify-content:space-between;margin:0 0 6px">
+        <strong style="font-size:14px">Alternative recommendations</strong>
+        <span style="font-size:11px;color:#666">compatible / related</span>
+      </div>
+      <div class="callout callout-alt" style="margin-bottom:10px">Close alternatives for “blue yoga pants for women under $50” · carousel</div>
+      <div style="display:flex;gap:10px;align-items:stretch;overflow:hidden">
+        <div style="flex:0 0 28px;align-self:center;border:1px solid #999;background:#fff;text-align:center;line-height:48px;font-weight:700">‹</div>
+        <div class="card" style="flex:0 0 140px"><span class="badge-card badge-alt">Alt</span><div class="img"></div><div class="name">Blue yoga short</div><div class="price">$29.00</div></div>
+        <div class="card" style="flex:0 0 140px"><div class="img"></div><div class="name">Navy yoga pant</div><div class="price">$42.00</div></div>
+        <div class="card" style="flex:0 0 140px"><div class="img"></div><div class="name">Blue capri pant</div><div class="price">$36.00</div></div>
+        <div class="card" style="flex:0 0 140px"><div class="img"></div><div class="name">Teal yoga pant</div><div class="price">$41.00</div></div>
+        <div style="flex:0 0 28px;align-self:center;border:1px solid #999;background:#fff;text-align:center;line-height:48px;font-weight:700">›</div>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:var(--muted)">
+      Full layout options (stacked / tabs / strip) and API shape:
+      <code>docs/wireframes-matchable-alternatives.html</code>
+    </p>
+
+    <div class="decision">
+      <h2>Talking points for manager</h2>
+      <ol style="margin:0;padding-left:18px;font-size:14px">
+        <li><strong>Entry:</strong> Same Magento search — no new URL for shoppers to learn.</li>
+        <li><strong>Conversation:</strong> AI asks only what’s missing; chips make it feel like guided search, not a chatbot.</li>
+        <li><strong>Trust:</strong> Goal Detected + tags show understanding; Best Match / Best Value explain ranking.</li>
+        <li><strong>Catalog:</strong> Final products always come from Magento catalog (via AI search), not invented items.</li>
+                <li><strong>Results:</strong> Matchable grid + Alternatives carousel (Option A approved).</li>
+      </ol>
+      <pre style="margin:14px 0 0">Shopper types query
+  → Magento AI result page
+    → start(session)
+      → ask_question?  → chips / free text → message(answer) → …
+      → search_products → Matchable grid + Alternatives carousel</pre>
+    </div>
+  </div>
+</body>
+</html>

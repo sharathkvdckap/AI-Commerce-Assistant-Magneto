@@ -5,13 +5,15 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store/etc/config.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <aicommerceassistant>
             <general>
                 <enabled>1</enabled>
+                <api_base_url>http://127.0.0.1:3001</api_base_url>
+                <timeout>90</timeout>
+                <redirect_catalog_search>0</redirect_catalog_search>
                 <assistant_url>http://localhost:5173/ai-assistant</assistant_url>
-                <redirect_catalog_search>1</redirect_catalog_search>
             </general>
         </aicommerceassistant>
     </default>
