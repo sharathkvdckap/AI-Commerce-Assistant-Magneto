@@ -78,18 +78,18 @@ define([
         }
 
         return '<li class="klizer-ai-item' + (opts.carousel ? ' klizer-ai-carousel__item' : '') + '">' +
-            '<div class="klizer-ai-card" data-price="' +
+            '<a class="klizer-ai-card" href="' + url + '" title="' + name + '" data-price="' +
             (item.price != null ? Number(item.price) : '') + '">' +
-            '<div class="klizer-ai-card__media">' +
+            '<span class="klizer-ai-card__media">' +
             category + badge +
             (image ? '<img src="' + image + '" alt="' + name + '" loading="lazy" />' : '') +
-            '<a class="klizer-ai-card__cta" href="' + url + '">' + $t('View Details') + '</a>' +
-            '</div>' +
-            '<div class="klizer-ai-card__body">' +
-            '<a class="klizer-ai-card__name" href="' + url + '">' + name + '</a>' +
+            '<span class="klizer-ai-card__cta">' + $t('View Details') + '</span>' +
+            '</span>' +
+            '<span class="klizer-ai-card__body">' +
+            '<span class="klizer-ai-card__name">' + name + '</span>' +
             (sku ? '<span class="klizer-ai-card__sku">' + $t('SKU') + ': ' + sku + '</span>' : '') +
             (priceText ? '<span class="klizer-ai-card__price">' + escapeHtml(priceText) + '</span>' : '') +
-            '</div></div></li>';
+            '</span></a></li>';
     }
 
     return function (config, element) {
