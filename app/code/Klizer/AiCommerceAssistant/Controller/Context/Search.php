@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace Klizer\AiCommerceAssistant\Controller\Ajax;
+namespace Klizer\AiCommerceAssistant\Controller\Context;
 
 use Klizer\AiCommerceAssistant\Helper\Data as Config;
 use Klizer\AiCommerceAssistant\Model\Api\Client;
@@ -18,9 +18,11 @@ use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Psr\Log\LoggerInterface;
 
 /**
- * Magento proxy: browser → Magento → AI /api/assistant/message
+ * Magento proxy: browser → Magento → AI /api/context/search
+ *
+ * Returns a suggestion only. The shopper always decides whether to reuse it.
  */
-class Message implements HttpPostActionInterface, CsrfAwareActionInterface
+class Search implements HttpPostActionInterface, CsrfAwareActionInterface
 {
     public function __construct(
         private readonly RequestInterface $request,
@@ -61,33 +63,35 @@ class Message implements HttpPostActionInterface, CsrfAwareActionInterface
             ]);
         }
 
-        $sessionId = trim((string) $this->request->getParam('sessionId', ''));
-        $answer = trim((string) $this->request->getParam('answer', ''));
-
-        if ($sessionId === '' || $answer === '') {
-            return $result->setHttpResponseCode(400)->setData([
-                'success' => false,
-                'message' => (string) __('sessionId and answer are required.'),
-            ]);
-        }
-
+        $query = trim((string) $this->request->getParam('query', ''));
         $userId = $this->userIdentity->resolve(
             trim((string) $this->request->getParam('userId', ''))
         );
 
+        // No identity or no query means there is nothing to match against.
+        if ($query === '' || $userId === '') {
+            return $result->setData([
+                'success' => true,
+                'data' => ['shouldReuse' => false],
+            ]);
+        }
+
         try {
-            $data = $this->client->message($sessionId, $answer, $userId);
+            $data = $this->client->contextSearch($userId, $query);
 
             return $result->setData([
                 'success' => true,
                 'data' => $data,
             ]);
         } catch (\Throwable $e) {
-            $this->logger->error('AiCommerceAssistant message failed', ['error' => $e->getMessage()]);
+            // Memory is an enhancement — never block the shopping flow.
+            $this->logger->warning('AiCommerceAssistant context search failed', [
+                'error' => $e->getMessage(),
+            ]);
 
-            return $result->setHttpResponseCode(500)->setData([
-                'success' => false,
-                'message' => (string) __('Unable to continue AI assistant. Please try again.'),
+            return $result->setData([
+                'success' => true,
+                'data' => ['shouldReuse' => false],
             ]);
         }
     }

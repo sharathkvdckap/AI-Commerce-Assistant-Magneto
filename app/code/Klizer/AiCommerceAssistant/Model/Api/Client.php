@@ -27,11 +27,28 @@ class Client
     /**
      * POST /api/assistant/start
      *
+     * @param array<string, mixed> $reuseFilters
      * @return array<string, mixed>
      */
-    public function start(string $query): array
-    {
-        return $this->postJson('/api/assistant/start', ['query' => $query]);
+    public function start(
+        string $query,
+        string $userId = '',
+        array $reuseFilters = [],
+        string $reuseHistoryId = ''
+    ): array {
+        $payload = ['query' => $query];
+
+        if ($userId !== '') {
+            $payload['userId'] = $userId;
+        }
+        if ($reuseFilters !== []) {
+            $payload['reuseFilters'] = $reuseFilters;
+        }
+        if ($reuseHistoryId !== '') {
+            $payload['reuseHistoryId'] = $reuseHistoryId;
+        }
+
+        return $this->postJson('/api/assistant/start', $payload);
     }
 
     /**
@@ -39,12 +56,18 @@ class Client
      *
      * @return array<string, mixed>
      */
-    public function message(string $sessionId, string $answer): array
+    public function message(string $sessionId, string $answer, string $userId = ''): array
     {
-        return $this->postJson('/api/assistant/message', [
+        $payload = [
             'sessionId' => $sessionId,
             'answer' => $answer,
-        ]);
+        ];
+
+        if ($userId !== '') {
+            $payload['userId'] = $userId;
+        }
+
+        return $this->postJson('/api/assistant/message', $payload);
     }
 
     /**
@@ -56,6 +79,19 @@ class Client
     public function search(array $filters): array
     {
         return $this->postJson('/api/assistant/search', $filters);
+    }
+
+    /**
+     * POST /api/context/search — find a similar previous shopping session.
+     *
+     * @return array<string, mixed>
+     */
+    public function contextSearch(string $userId, string $query): array
+    {
+        return $this->postJson('/api/context/search', [
+            'userId' => $userId,
+            'query' => $query,
+        ]);
     }
 
     /**

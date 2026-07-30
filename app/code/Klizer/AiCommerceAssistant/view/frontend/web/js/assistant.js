@@ -5,7 +5,12 @@ define([
 ], function ($, cookies, $t) {
     'use strict';
 
-    var PAGE_SIZE_DEFAULT = 0; // 0 = show all products (no client-side page limit)
+    var PAGE_SIZE_DEFAULT = 0, // 0 = show all products (no client-side page limit)
+        USER_ID_STORAGE_KEY = 'ai-commerce-assistant-user-id',
+        MEMORY_FACT_KEYS = [
+            'budget', 'price_max', 'brand', 'size',
+            'color', 'colour', 'gender', 'category', 'usage', 'material'
+        ];
 
     function escapeHtml(str) {
         return $('<div>').text(str == null ? '' : String(str)).html();
@@ -15,6 +20,52 @@ define([
         return String(key || '')
             .replace(/_/g, ' ')
             .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+    }
+
+    /**
+     * Guest identity for context memory. Logged-in shoppers are keyed
+     * server-side by customer id, so this is only a fallback.
+     */
+    function getOrCreateUserId() {
+        var existing,
+            id;
+
+        try {
+            existing = window.localStorage.getItem(USER_ID_STORAGE_KEY);
+            if (existing && $.trim(existing)) {
+                return $.trim(existing);
+            }
+            id = (window.crypto && window.crypto.randomUUID)
+                ? window.crypto.randomUUID()
+                : 'guest-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+            window.localStorage.setItem(USER_ID_STORAGE_KEY, id);
+
+            return id;
+        } catch (e) {
+            return '';
+        }
+    }
+
+    function memoryFacts(filters) {
+        var seen = {},
+            facts = [];
+
+        MEMORY_FACT_KEYS.forEach(function (key) {
+            var value = filters ? filters[key] : null,
+                label;
+
+            if (value == null || value === '' || typeof value === 'object') {
+                return;
+            }
+            label = key === 'price_max' ? $t('Budget') : humanizeKey(key);
+            if (seen[label]) {
+                return;
+            }
+            seen[label] = true;
+            facts.push({ label: label, value: String(value) });
+        });
+
+        return facts;
     }
 
     function filterTags(filters) {
@@ -57,14 +108,24 @@ define([
         return (currency === 'USD' ? '$' : currency + ' ') + price.toFixed(2);
     }
 
+    function isInStock(item) {
+        return item.inStock !== false && item.in_stock !== false;
+    }
+
     function productCard(item, absoluteIndex, options) {
         var opts = options || {},
             url = escapeHtml(item.productUrl || item.url || '#'),
             name = escapeHtml(item.name || ''),
             sku = escapeHtml(item.sku || ''),
-            priceText = formatPrice(item),
+            inStock = isInStock(item),
+            priceText = inStock ? formatPrice(item) : '',
             image = escapeHtml(item.imageUrl || item.image || ''),
             badge = '',
+            stockLabel = inStock
+                ? ''
+                : '<span class="klizer-ai-card__stock klizer-ai-card__stock--oos">' +
+                    $t('Out of Stock') +
+                    '</span>',
             category = (item.reasons && item.reasons[0])
                 ? '<span class="klizer-ai-card__cat">' + escapeHtml(String(item.reasons[0]).replace(/^Magento category:\s*/i, '')) + '</span>'
                 : '';
@@ -78,8 +139,10 @@ define([
         }
 
         return '<li class="klizer-ai-item' + (opts.carousel ? ' klizer-ai-carousel__item' : '') + '">' +
-            '<a class="klizer-ai-card" href="' + url + '" title="' + name + '" data-price="' +
-            (item.price != null ? Number(item.price) : '') + '">' +
+            '<a class="klizer-ai-card' + (inStock ? '' : ' klizer-ai-card--oos') + '" href="' + url +
+            '" title="' + name + '" data-price="' +
+            (inStock && item.price != null ? Number(item.price) : '') +
+            '" data-in-stock="' + (inStock ? '1' : '0') + '">' +
             '<span class="klizer-ai-card__media">' +
             category + badge +
             (image ? '<img src="' + image + '" alt="' + name + '" loading="lazy" />' : '') +
@@ -88,6 +151,7 @@ define([
             '<span class="klizer-ai-card__body">' +
             '<span class="klizer-ai-card__name">' + name + '</span>' +
             (sku ? '<span class="klizer-ai-card__sku">' + $t('SKU') + ': ' + sku + '</span>' : '') +
+            stockLabel +
             (priceText ? '<span class="klizer-ai-card__price">' + escapeHtml(priceText) + '</span>' : '') +
             '</span></a></li>';
     }
@@ -125,7 +189,13 @@ define([
             $modeList = $root.find('[data-role="mode-list"]'),
             $pagination = $root.find('[data-role="pagination"]'),
             $paginationItems = $root.find('[data-role="pagination-items"]'),
+            $memory = $root.find('[data-role="memory"]'),
+            $memoryTitle = $root.find('[data-role="memory-title"]'),
+            $memorySummary = $root.find('[data-role="memory-summary"]'),
+            $memoryFacts = $root.find('[data-role="memory-facts"]'),
             sessionId = null,
+            userId = getOrCreateUserId(),
+            pendingMemory = null,
             allProducts = [],
             allAlternatives = [],
             filteredProducts = [],
@@ -153,6 +223,8 @@ define([
         }
 
         function renderGoal(data) {
+            hideMemory();
+
             var filters = data.filters || {},
                 tags = filterTags(filters),
                 title = goalTitle(filters, query),
@@ -488,11 +560,11 @@ define([
             setStatus(data.message || $t('Unexpected AI response.'), true);
         }
 
-        function post(url, payload) {
+        function post(url, payload, statusText) {
             var body = payload || {};
             body.form_key = formKey();
 
-            setStatus($t('Thinking…'), false);
+            setStatus(statusText === undefined ? $t('Thinking…') : statusText, false);
 
             return $.ajax({
                 url: url,
@@ -503,13 +575,66 @@ define([
             });
         }
 
-        function start() {
-            if (!query) {
-                setStatus($t('Enter a search query to use the AI assistant.'), true);
-                return;
+        function requestFailed(xhr) {
+            var msg = $t('AI assistant request failed.');
+
+            try {
+                var body = xhr.responseJSON || JSON.parse(xhr.responseText || '{}');
+                if (body && body.message) {
+                    msg = body.message;
+                }
+            } catch (e) {}
+            setStatus(msg, true);
+        }
+
+        function hideMemory() {
+            pendingMemory = null;
+            $memory.prop('hidden', true);
+            $memoryFacts.empty();
+        }
+
+        function renderMemory(match, message) {
+            var facts = memoryFacts(match.filters);
+
+            pendingMemory = match;
+            $memoryTitle.text(match.originalQuery || query);
+
+            if (message) {
+                $memorySummary.text(message).prop('hidden', false);
+            } else {
+                $memorySummary.prop('hidden', true);
             }
 
-            post(config.startUrl, { query: query })
+            $memoryFacts.empty();
+            facts.forEach(function (fact) {
+                $memoryFacts
+                    .append($('<dt class="klizer-ai-memory__label"></dt>').text(fact.label))
+                    .append($('<dd class="klizer-ai-memory__value"></dd>').text(fact.value));
+            });
+
+            $memory.prop('hidden', false);
+            setStatus('', false);
+        }
+
+        /**
+         * Sends the shopper's query to the AI. Previous filters are only
+         * included when the shopper explicitly chose to continue.
+         */
+        function startAssistant(reuse) {
+            var payload = { query: query, userId: userId };
+
+            hideMemory();
+
+            if (reuse) {
+                if (reuse.filters) {
+                    payload.reuseFilters = reuse.filters;
+                }
+                if (reuse.historyId) {
+                    payload.reuseHistoryId = reuse.historyId;
+                }
+            }
+
+            post(config.startUrl, payload)
                 .done(function (res) {
                     if (!res || !res.success) {
                         setStatus((res && res.message) || $t('AI start failed.'), true);
@@ -517,15 +642,37 @@ define([
                     }
                     handlePayload(res.data);
                 })
-                .fail(function (xhr) {
-                    var msg = $t('AI assistant request failed.');
-                    try {
-                        var body = xhr.responseJSON || JSON.parse(xhr.responseText || '{}');
-                        if (body && body.message) {
-                            msg = body.message;
-                        }
-                    } catch (e) {}
-                    setStatus(msg, true);
+                .fail(requestFailed);
+        }
+
+        /**
+         * Looks for a similar past session before asking clarifying questions.
+         * Memory is never applied automatically — the shopper decides.
+         */
+        function start() {
+            if (!query) {
+                setStatus($t('Enter a search query to use the AI assistant.'), true);
+                return;
+            }
+
+            if (!config.contextSearchUrl || !userId) {
+                startAssistant(null);
+                return;
+            }
+
+            post(config.contextSearchUrl, { query: query, userId: userId }, $t('Checking your history…'))
+                .done(function (res) {
+                    var data = res && res.data;
+
+                    if (data && data.shouldReuse && data.match) {
+                        renderMemory(data.match, data.message);
+                        return;
+                    }
+                    startAssistant(null);
+                })
+                .fail(function () {
+                    // Memory is optional — fall through to a normal search.
+                    startAssistant(null);
                 });
         }
 
@@ -534,7 +681,7 @@ define([
                 return;
             }
 
-            post(config.messageUrl, { sessionId: sessionId, answer: answer })
+            post(config.messageUrl, { sessionId: sessionId, answer: answer, userId: userId })
                 .done(function (res) {
                     if (!res || !res.success) {
                         setStatus((res && res.message) || $t('AI follow-up failed.'), true);
@@ -542,17 +689,22 @@ define([
                     }
                     handlePayload(res.data);
                 })
-                .fail(function (xhr) {
-                    var msg = $t('AI assistant request failed.');
-                    try {
-                        var body = xhr.responseJSON || JSON.parse(xhr.responseText || '{}');
-                        if (body && body.message) {
-                            msg = body.message;
-                        }
-                    } catch (e) {}
-                    setStatus(msg, true);
-                });
+                .fail(requestFailed);
         }
+
+        $root.find('[data-role="memory-continue"]').on('click', function () {
+            if (!pendingMemory) {
+                return;
+            }
+            startAssistant({
+                filters: pendingMemory.filters,
+                historyId: pendingMemory.historyId
+            });
+        });
+
+        $root.find('[data-role="memory-new"]').on('click', function () {
+            startAssistant(null);
+        });
 
         $clarifyOptions.on('click', '.klizer-ai-chip', function () {
             sendAnswer($(this).attr('data-answer'));

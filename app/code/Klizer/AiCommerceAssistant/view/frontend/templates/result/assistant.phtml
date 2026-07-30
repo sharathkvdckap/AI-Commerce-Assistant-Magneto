@@ -13,8 +13,9 @@ $query = $block->getQueryText();
      data-mage-init='{"Klizer_AiCommerceAssistant/js/assistant": {
          "startUrl": "<?= $block->escapeUrl($block->getStartUrl()) ?>",
          "messageUrl": "<?= $block->escapeUrl($block->getMessageUrl()) ?>",
+         "contextSearchUrl": "<?= $block->escapeUrl($block->getContextSearchUrl()) ?>",
          "query": "<?= $block->escapeJs($query) ?>",
-         "pageSize": 0
+         "pageSize": 12
      }}'>
 
     <header class="klizer-ai-assistant__header">
@@ -35,6 +36,22 @@ $query = $block->getQueryText();
     <?php endif; ?>
 
     <div class="klizer-ai-assistant__status" data-role="status" hidden></div>
+
+    <!-- Previous shopping session (memory reuse) -->
+    <div class="klizer-ai-memory" data-role="memory" hidden>
+        <p class="klizer-ai-memory__eyebrow"><?= $block->escapeHtml(__('Previous Shopping Session')) ?></p>
+        <h2 class="klizer-ai-memory__title" data-role="memory-title"></h2>
+        <p class="klizer-ai-memory__summary" data-role="memory-summary" hidden></p>
+        <dl class="klizer-ai-memory__facts" data-role="memory-facts"></dl>
+        <div class="klizer-ai-memory__actions">
+            <button type="button" class="action primary" data-role="memory-continue">
+                <?= $block->escapeHtml(__('Continue Previous Search')) ?>
+            </button>
+            <button type="button" class="action secondary" data-role="memory-new">
+                <?= $block->escapeHtml(__('Start New Search')) ?>
+            </button>
+        </div>
+    </div>
 
     <!-- Goal Detected -->
     <div class="klizer-ai-goal" data-role="goal" hidden>

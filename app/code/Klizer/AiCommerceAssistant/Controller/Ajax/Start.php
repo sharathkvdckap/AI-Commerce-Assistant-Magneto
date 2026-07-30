@@ -8,6 +8,7 @@ namespace Klizer\AiCommerceAssistant\Controller\Ajax;
 
 use Klizer\AiCommerceAssistant\Helper\Data as Config;
 use Klizer\AiCommerceAssistant\Model\Api\Client;
+use Klizer\AiCommerceAssistant\Model\UserIdentity;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -27,6 +28,7 @@ class Start implements HttpPostActionInterface, CsrfAwareActionInterface
         private readonly Config $config,
         private readonly Client $client,
         private readonly FormKeyValidator $formKeyValidator,
+        private readonly UserIdentity $userIdentity,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -71,8 +73,18 @@ class Start implements HttpPostActionInterface, CsrfAwareActionInterface
             ]);
         }
 
+        $userId = $this->userIdentity->resolve(
+            trim((string) $this->request->getParam('userId', ''))
+        );
+        $reuseHistoryId = trim((string) $this->request->getParam('reuseHistoryId', ''));
+
         try {
-            $data = $this->client->start($query);
+            $data = $this->client->start(
+                $query,
+                $userId,
+                $this->readReuseFilters(),
+                $reuseHistoryId
+            );
 
             return $result->setData([
                 'success' => true,
@@ -86,5 +98,28 @@ class Start implements HttpPostActionInterface, CsrfAwareActionInterface
                 'message' => (string) __('Unable to start AI assistant. Please try again.'),
             ]);
         }
+    }
+
+    /**
+     * Previous-session filters the shopper explicitly chose to reuse.
+     *
+     * @return array<string, string|int|float|bool>
+     */
+    private function readReuseFilters(): array
+    {
+        $raw = $this->request->getParam('reuseFilters');
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        $filters = [];
+        foreach ($raw as $key => $value) {
+            if (!is_string($key) || is_array($value) || $value === null || $value === '') {
+                continue;
+            }
+            $filters[$key] = is_scalar($value) ? $value : (string) $value;
+        }
+
+        return $filters;
     }
 }

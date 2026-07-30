@@ -96,6 +96,60 @@ body.klizer-ai-search-page .sidebar.sidebar-additional {
     border: 1px solid #f3caca;
 }
 
+/* Previous shopping session (memory reuse) */
+.klizer-ai-memory {
+    background: #eefbf3;
+    border: 1px solid #a7e8c4;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+}
+.klizer-ai-memory__eyebrow {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #157347;
+}
+.klizer-ai-memory__title {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f1f1f;
+    line-height: 1.3;
+}
+.klizer-ai-memory__summary {
+    margin: 0 0 12px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.klizer-ai-memory__facts {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+    margin: 0 0 16px;
+    font-size: 14px;
+}
+.klizer-ai-memory__label {
+    margin: 0;
+    color: #555;
+}
+.klizer-ai-memory__label::after {
+    content: ':';
+}
+.klizer-ai-memory__value {
+    margin: 0;
+    font-weight: 600;
+    color: #1f1f1f;
+}
+.klizer-ai-memory__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 /* Goal Detected */
 .klizer-ai-goal {
     background: #f3f0ff;
@@ -521,6 +575,26 @@ body.klizer-ai-search-page .sidebar.sidebar-additional {
     font-size: 15px;
     color: #333;
     margin-top: auto;
+}
+.klizer-ai-card__stock {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+.klizer-ai-card__stock--oos {
+    color: #c62828;
+}
+.klizer-ai-card--oos {
+    opacity: 0.92;
+}
+.klizer-ai-card--oos .klizer-ai-card__media img {
+    filter: grayscale(0.35);
+}
+.klizer-ai-card--oos .klizer-ai-card__name {
+    color: #c62828;
 }
 
 /* List view */

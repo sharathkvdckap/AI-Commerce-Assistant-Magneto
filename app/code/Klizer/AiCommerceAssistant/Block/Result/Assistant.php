@@ -51,4 +51,9 @@ class Assistant extends Template
     {
         return $this->getUrl('aicommerceassistant/ajax/message');
     }
+
+    public function getContextSearchUrl(): string
+    {
+        return $this->getUrl('aicommerceassistant/context/search');
+    }
 }
