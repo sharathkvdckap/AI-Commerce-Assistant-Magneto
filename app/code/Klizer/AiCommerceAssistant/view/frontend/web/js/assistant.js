@@ -23,26 +23,40 @@ define([
     }
 
     /**
-     * Guest identity for context memory. Logged-in shoppers are keyed
-     * server-side by customer id, so this is only a fallback.
+     * Prefer Magento customer id (customer_{id}) from the page config.
+     * Guests keep a stable browser-generated id in localStorage.
      */
-    function getOrCreateUserId() {
-        var existing,
+    function getOrCreateUserId(preferredUserId) {
+        var preferred = $.trim(preferredUserId || ''),
+            existing,
             id;
 
         try {
-            existing = window.localStorage.getItem(USER_ID_STORAGE_KEY);
-            if (existing && $.trim(existing)) {
-                return $.trim(existing);
+            // Logged-in: always use server-resolved customer_* and sync storage
+            if (preferred.indexOf('customer_') === 0) {
+                window.localStorage.setItem(USER_ID_STORAGE_KEY, preferred);
+                return preferred;
             }
+
+            existing = $.trim(window.localStorage.getItem(USER_ID_STORAGE_KEY) || '');
+
+            // Logged out: drop a previous customer_* id so we do not reuse it
+            if (existing.indexOf('customer_') === 0) {
+                existing = '';
+            }
+
+            if (existing) {
+                return existing;
+            }
+
             id = (window.crypto && window.crypto.randomUUID)
-                ? window.crypto.randomUUID()
+                ? 'guest-' + window.crypto.randomUUID()
                 : 'guest-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
             window.localStorage.setItem(USER_ID_STORAGE_KEY, id);
 
             return id;
         } catch (e) {
-            return '';
+            return preferred || '';
         }
     }
 
@@ -194,7 +208,7 @@ define([
             $memorySummary = $root.find('[data-role="memory-summary"]'),
             $memoryFacts = $root.find('[data-role="memory-facts"]'),
             sessionId = null,
-            userId = getOrCreateUserId(),
+            userId = getOrCreateUserId(config.userId),
             pendingMemory = null,
             allProducts = [],
             allAlternatives = [],

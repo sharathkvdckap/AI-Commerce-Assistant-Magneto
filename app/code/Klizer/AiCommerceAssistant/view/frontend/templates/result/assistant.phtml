@@ -15,6 +15,7 @@ $query = $block->getQueryText();
          "messageUrl": "<?= $block->escapeUrl($block->getMessageUrl()) ?>",
          "contextSearchUrl": "<?= $block->escapeUrl($block->getContextSearchUrl()) ?>",
          "query": "<?= $block->escapeJs($query) ?>",
+         "userId": "<?= $block->escapeJs($block->getUserId()) ?>",
          "pageSize": 12
      }}'>
 
