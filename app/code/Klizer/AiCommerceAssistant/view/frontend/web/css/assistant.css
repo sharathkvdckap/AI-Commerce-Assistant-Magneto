@@ -150,7 +150,7 @@ body.klizer-ai-search-page .sidebar.sidebar-additional {
     gap: 10px;
 }
 
-/* Goal Detected */
+/* Looking for (shopping intent) */
 .klizer-ai-goal {
     background: #f3f0ff;
     border: 1px solid #ddd6fe;
