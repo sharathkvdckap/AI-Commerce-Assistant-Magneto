@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Klizer_AiCommerceAssistant::parent"
+             title="AI Commerce Assistant"
+             module="Klizer_AiCommerceAssistant"
+             sortOrder="75"
+             resource="Klizer_AiCommerceAssistant::analytics"
+             dependsOnConfig="aicommerceassistant/analytics/enabled"/>
+        <add id="Klizer_AiCommerceAssistant::analytics_dashboard"
+             title="Search ROI Dashboard"
+             module="Klizer_AiCommerceAssistant"
+             sortOrder="10"
+             parent="Klizer_AiCommerceAssistant::parent"
+             action="aicommerceassistant/dashboard/index"
+             resource="Klizer_AiCommerceAssistant::analytics_dashboard"/>
+    </menu>
+</config>

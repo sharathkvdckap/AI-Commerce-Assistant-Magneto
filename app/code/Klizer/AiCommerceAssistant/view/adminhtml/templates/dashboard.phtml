@@ -1,0 +1,109 @@
+<?php
+/**
+ * Copyright © Klizer. All rights reserved.
+ *
+ * @var \Klizer\AiCommerceAssistant\Block\Adminhtml\Dashboard $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$payload = $block->getSummaryPayload();
+$dashUrl = $block->getDashboardUrl();
+$days = $block->getWindowDays();
+?>
+<div class="klizer-ai-analytics" style="max-width:1100px">
+    <p style="color:#666;margin:0 0 16px">
+        <?= $escaper->escapeHtml(__(
+            'What shoppers searched, Magento vs hybrid/semantic lift, zero-result rate, and CTR (last %1 days). Data comes from the AI Assistant API (Postgres).',
+            $days
+        )) ?>
+    </p>
+
+    <?php if (!$payload['ok']): ?>
+        <div class="message message-warning">
+            <div><?= $escaper->escapeHtml($payload['error'] ?? __('Unable to load analytics.')) ?></div>
+        </div>
+    <?php else: ?>
+        <?php
+        $s = $payload['summary'];
+        $cards = [
+            [
+                __('Searches'),
+                (string) ($s['totalSearches'] ?? 0),
+                ($s['uniqueUsers'] ?? 0) . ' ' . __('unique users'),
+            ],
+            [
+                __('Zero-result rate'),
+                $block->formatPercent($s['zeroResultRate'] ?? 0),
+                ($s['zeroResultCount'] ?? 0) . ' ' . __('empty'),
+            ],
+            [
+                __('Hybrid / semantic share'),
+                $block->formatPercent($s['hybridLiftShare'] ?? 0),
+                ($s['hybridOrSemanticCount'] ?? 0) . ' ' . __('hybrid+semantic'),
+            ],
+            [
+                __('CTR'),
+                $block->formatPercent($s['ctr'] ?? 0),
+                ($s['clicks'] ?? 0) . ' ' . __('clicks') . ' / ' . ($s['impressions'] ?? 0) . ' ' . __('impressions'),
+            ],
+        ];
+        ?>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+            <?php foreach ($cards as [$label, $value, $hint]): ?>
+                <div style="flex:1;min-width:180px;border:1px solid #e3e3e3;border-radius:10px;padding:14px;background:#fff">
+                    <div style="font-size:11px;text-transform:uppercase;color:#888">
+                        <?= $escaper->escapeHtml((string) $label) ?>
+                    </div>
+                    <div style="font-size:28px;font-weight:600;margin-top:6px">
+                        <?= $escaper->escapeHtml((string) $value) ?>
+                    </div>
+                    <div style="font-size:12px;color:#666;margin-top:4px">
+                        <?= $escaper->escapeHtml((string) $hint) ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <h2 style="margin:8px 0"><?= $escaper->escapeHtml(__('Top queries (what)')) ?></h2>
+        <div class="admin__data-grid-wrap">
+            <table class="data-grid" style="width:100%;background:#fff">
+                <thead>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Query')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Count')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Zeros')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                $queries = $s['topQueries'] ?? [];
+                $queries = is_array($queries) ? array_slice($queries, 0, 10) : [];
+                if ($queries === []):
+                    ?>
+                    <tr>
+                        <td colspan="3"><?= $escaper->escapeHtml(__('No searches yet.')) ?></td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($queries as $q): ?>
+                        <tr>
+                            <td><?= $escaper->escapeHtml((string) ($q['query'] ?? '')) ?></td>
+                            <td><?= (int) ($q['count'] ?? 0) ?></td>
+                            <td><?= (int) ($q['zeroResults'] ?? 0) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($dashUrl !== ''): ?>
+        <p style="margin:16px 0">
+            <a href="<?= $escaper->escapeUrl($dashUrl) ?>" target="_blank" rel="noopener">
+                <?= $escaper->escapeHtml(__('Open full React dashboard')) ?>
+            </a>
+        </p>
+        <iframe src="<?= $escaper->escapeUrl($dashUrl) ?>"
+                title="<?= $escaper->escapeHtmlAttr(__('AI Commerce analytics dashboard')) ?>"
+                style="width:100%;min-height:720px;border:1px solid #d6d6d6;border-radius:8px;background:#fff"></iframe>
+    <?php endif; ?>
+</div>

@@ -95,6 +95,36 @@ class Client
     }
 
     /**
+     * POST /api/analytics/track — product impressions & clicks (CTR).
+     *
+     * @param list<array<string, mixed>> $events
+     * @return array<string, mixed>
+     */
+    public function trackAnalytics(
+        string $userId,
+        array $events,
+        ?string $sessionId = null,
+        ?string $searchId = null,
+        ?string $source = null
+    ): array {
+        $payload = [
+            'userId' => $userId,
+            'events' => $events,
+        ];
+        if ($sessionId !== null && $sessionId !== '') {
+            $payload['sessionId'] = $sessionId;
+        }
+        if ($searchId !== null && $searchId !== '') {
+            $payload['searchId'] = $searchId;
+        }
+        if ($source !== null && $source !== '') {
+            $payload['source'] = $source;
+        }
+
+        return $this->postJson('/api/analytics/track', $payload);
+    }
+
+    /**
      * @param array<string, mixed> $payload
      * @return array<string, mixed>
      */
