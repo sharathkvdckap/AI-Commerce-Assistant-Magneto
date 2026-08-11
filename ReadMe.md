@@ -2,16 +2,6 @@
 
 Magento 2 storefront module that embeds the **AI Commerce Assistant** on catalog search: header AI icon, clarifying questions, and matchable product PLP. Product data always comes from Magento; conversation logic runs on the Node API.
 
-## Docs (Node app root)
-
-Full **how to setup**, API, semantic search, and Magento wiring live in the Node repo:
-
-`/home/sharath/Documents/AI-Commerce-Assistant/`
-
-| Doc | Purpose |
-| --- | ------- |
-| `README.md` | How to setup (API, Ollama, Magento module, semantic) |
-| `DEMO.md` | Screenshots & Jumpshare videos (separate page) | 
 
 ## Quick Magento setup
 
