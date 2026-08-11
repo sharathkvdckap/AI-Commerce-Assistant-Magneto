@@ -62,6 +62,36 @@ body.klizer-ai-search-page .sidebar.sidebar-additional {
     color: #666;
 }
 
+.klizer-ai-entry {
+    margin: 0 0 20px;
+    padding: 18px 18px 16px;
+    background: #f7faf9;
+    border: 1px solid #d5e8e4;
+    border-radius: 10px;
+}
+.klizer-ai-entry__label {
+    display: block;
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f1f1f;
+}
+.klizer-ai-entry__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: stretch;
+}
+.klizer-ai-entry__input {
+    flex: 1 1 220px;
+    min-height: 40px;
+    margin: 0;
+}
+.klizer-ai-entry__row .action.primary {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
 .klizer-ai-assistant__querybar {
     display: flex;
     flex-wrap: wrap;

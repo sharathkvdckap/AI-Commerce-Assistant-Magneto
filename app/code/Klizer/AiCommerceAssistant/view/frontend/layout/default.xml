@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ *
+ * Priority 1: AI icon inside Magento header search (.actions row).
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Klizer_AiCommerceAssistant::css/launcher.css"
+             ifconfig="aicommerceassistant/general/enabled"/>
+    </head>
+    <body>
+        <referenceBlock name="top.search">
+            <block class="Klizer\AiCommerceAssistant\Block\Header\Launcher"
+                   name="klizer.ai.launcher"
+                   as="aiCommerceLauncher"
+                   template="Klizer_AiCommerceAssistant::header/launcher.phtml"
+                   before="image.recognition.upload"/>
+        </referenceBlock>
+    </body>
+</page>

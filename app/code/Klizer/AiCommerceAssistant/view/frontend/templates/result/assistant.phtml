@@ -29,12 +29,28 @@ $query = $block->getQueryText();
         </p>
     </header>
 
-    <?php if ($query !== ''): ?>
-        <div class="klizer-ai-assistant__querybar">
-            <span class="klizer-ai-assistant__querylabel"><?= $block->escapeHtml(__('Your search')) ?></span>
-            <strong class="klizer-ai-assistant__querytext"><?= $block->escapeHtml($query) ?></strong>
+    <div class="klizer-ai-assistant__querybar" data-role="querybar"<?= $query === '' ? ' hidden' : '' ?>>
+        <span class="klizer-ai-assistant__querylabel"><?= $block->escapeHtml(__('Your search')) ?></span>
+        <strong class="klizer-ai-assistant__querytext" data-role="querytext"><?= $block->escapeHtml($query) ?></strong>
+    </div>
+
+    <!-- Empty-query entry (header AI icon with no search text) -->
+    <div class="klizer-ai-entry" data-role="entry"<?= $query !== '' ? ' hidden' : '' ?>>
+        <label class="klizer-ai-entry__label" for="klizer-ai-entry-input">
+            <?= $block->escapeHtml(__('What are you looking for?')) ?>
+        </label>
+        <div class="klizer-ai-entry__row">
+            <input type="text"
+                   id="klizer-ai-entry-input"
+                   class="input-text klizer-ai-entry__input"
+                   data-role="entry-input"
+                   placeholder="<?= $block->escapeHtmlAttr(__('e.g. blue yoga pants for women under $50')) ?>"
+                   autocomplete="off" />
+            <button type="button" class="action primary" data-role="entry-send">
+                <?= $block->escapeHtml(__('Find with AI')) ?>
+            </button>
         </div>
-    <?php endif; ?>
+    </div>
 
     <div class="klizer-ai-assistant__status" data-role="status" hidden></div>
 

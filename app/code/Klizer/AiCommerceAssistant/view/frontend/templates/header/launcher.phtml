@@ -1,0 +1,32 @@
+<?php
+/**
+ * Copyright © Klizer. All rights reserved.
+ *
+ * @var \Klizer\AiCommerceAssistant\Block\Header\Launcher $block
+ */
+if (!$block->isEnabled()) {
+    return;
+}
+?>
+<div class="klizer-ai-launcher"
+     data-mage-init='{"Klizer_AiCommerceAssistant/js/launcher": {
+         "entryUrl": "<?= $block->escapeUrl($block->getEntryUrl()) ?>",
+         "searchResultUrl": "<?= $block->escapeUrl($block->getSearchResultUrl()) ?>",
+         "searchInputSelector": "#search",
+         "formSelector": "#search_mini_form"
+     }}'>
+    <button type="button"
+            class="klizer-ai-launcher__btn"
+            data-role="ai-launcher"
+            title="<?= $block->escapeHtmlAttr(__('Ask AI to shop')) ?>"
+            aria-label="<?= $block->escapeHtmlAttr(__('Ask AI to shop')) ?>">
+        <span class="klizer-ai-launcher__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 3.5l1.2 3.6L17 8.3l-3.8 1.2L12 13l-1.2-3.5L7 8.3l3.8-1.2L12 3.5z"/>
+                <path d="M18.5 13.5l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7.7-2.1z"/>
+                <path d="M6.2 14.2l.55 1.65 1.65.55-1.65.55-.55 1.65-.55-1.65-1.65-.55 1.65-.55.55-1.65z"/>
+            </svg>
+        </span>
+        <span class="klizer-ai-launcher__label"><?= $block->escapeHtml(__('Ask AI')) ?></span>
+    </button>
+</div>

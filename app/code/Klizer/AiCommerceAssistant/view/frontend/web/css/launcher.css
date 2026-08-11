@@ -1,0 +1,121 @@
+/**
+ * Copyright © Klizer. All rights reserved.
+ *
+ * Header search AI icon — sits in .actions with image-search + submit.
+ */
+
+.block-search .actions {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    height: 32px;
+    position: absolute;
+    right: 6px;
+    top: 0;
+    z-index: 5;
+}
+
+.block-search .actions .action.search {
+    position: static !important;
+    right: auto;
+    top: auto;
+    flex: 0 0 32px;
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    z-index: 6;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+/* Disabled Magento submit still looks clickable; we re-enable via launcher.js */
+.block-search .actions .action.search:disabled {
+    opacity: 0.55;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.block-search .klizer-ai-launcher {
+    align-items: center;
+    display: flex;
+    flex: 0 0 28px;
+    height: 32px;
+    justify-content: center;
+    position: static;
+    z-index: 5;
+}
+
+/* Fallback when rendered inside .control (core form.mini.phtml) */
+.block-search .control > .klizer-ai-launcher {
+    position: absolute;
+    right: 38px;
+    top: 0;
+    z-index: 5;
+}
+
+.block-search .klizer-ai-launcher__btn {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: #0f766e;
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 28px;
+    height: 32px;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    width: 28px;
+}
+
+.block-search .klizer-ai-launcher__btn:hover,
+.block-search .klizer-ai-launcher__btn:focus {
+    color: #115e59;
+    outline: none;
+}
+
+.block-search .klizer-ai-launcher__label {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 1px;
+}
+
+.block-search .klizer-ai-launcher__icon {
+    display: block;
+    height: 18px;
+    line-height: 0;
+    pointer-events: none;
+    width: 18px;
+}
+
+.block-search .klizer-ai-launcher__icon svg {
+    display: block;
+    fill: currentColor;
+    height: 18px;
+    width: 18px;
+}
+
+/* Room for AI (+ camera when present) + search icon */
+@media (min-width: 768px) {
+    .block-search input#search.input-text {
+        padding-right: 72px;
+    }
+
+    .block-search[data-image-search-enabled="1"] input#search.input-text {
+        padding-right: 96px;
+    }
+}
+
+@media (max-width: 767px) {
+    .block-search .actions {
+        right: 12px;
+        top: 18px;
+    }
+}
