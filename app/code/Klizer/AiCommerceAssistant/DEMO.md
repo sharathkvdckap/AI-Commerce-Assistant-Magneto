@@ -1,11 +1,10 @@
 # Demo walkthrough — screenshots & videos
 
-Visual guide for **AI Commerce Assistant**: Magento config → search → clarifying questions → PLP results → semantic / context memory.
+Visual guide for **AI Commerce Assistant**: Magento config → search → clarifying questions → PLP results → semantic / context memory → **Search Analytics**.
 
 Companion docs:
 
-- [README.md](./README.md) — **how to setup** and run
-- [HACKATHON_DOCUMENTATION.md](./HACKATHON_DOCUMENTATION.md) — architecture deep dive
+- [README.md](./README.md) — **how to setup** and run 
 
 ---
 
@@ -18,7 +17,8 @@ Companion docs:
 5. [Semantic search & embeddings](#4-semantic-search--embeddings)
 6. [Industrial parts flow](#5-industrial-parts-flow)
 7. [Fitness equipment flow](#6-fitness-equipment-flow)
-8. [Screenshot index](#screenshot-index)
+8. [Search Analytics](#7-search-analytics)
+9. [Screenshot index](#screenshot-index)
 
 ---
 
@@ -29,6 +29,7 @@ Companion docs:
 | 1 | Apparels | [Jumpshare – apparels](https://jumpshare.com/share/cvHdGxYwQrR6WKjZmTN7) |
 | 2 | Fitness equipment | [Jumpshare – fitness equipment](https://jumpshare.com/share/ddLEwgSeXLwBFWerYJSd) |
 | 3 | Industrial products | [Jumpshare – industry products](https://jumpshare.com/share/7nwze2d2xxoKBQoCKol7) |
+| 4 | Search analytics | [Jumpshare – search analytics](https://jumpshare.com/share/0TF12THbX8IS9ukftblL) |
 
 ---
 
@@ -168,6 +169,29 @@ e.g. *Need something for strength training*.
 
 ---
 
+## 7. Search Analytics
+
+Admin Search ROI dashboard (merged into this module). Config + dashboard screenshots and demo video (same as [README.md](./README.md)).
+
+### Admin config — Search Analytics
+
+Stores → Configuration → Klizer → AI Commerce Assistant → Search Analytics (Admin ROI)
+
+![Admin config for search analytics](https://i.ibb.co/ycpzSgKD/image.png)
+
+### AI Commerce — Search analytics Dashboard
+
+Admin menu: **AI Commerce Assistant → Search ROI Dashboard**  
+(`/admin/aicommerceassistant/dashboard/index`)
+
+![Search analytics dashboard](https://i.ibb.co/4RBxpd70/AI-Commerce-Search-analytics-AI-Commerce-Assistant-Magento-Admin.png)
+
+![AI Commerce Assistant analytics](https://i.ibb.co/NdK7wGBD/AI-Commerce-Assistant.png)
+
+**Video:** [Search analytics demo](https://jumpshare.com/share/0TF12THbX8IS9ukftblL)
+
+---
+
 ## Screenshot index
 
 | Caption | Image |
@@ -192,3 +216,6 @@ e.g. *Need something for strength training*.
 | Industrial Grid PLP | https://i.ibb.co/SHqN6D1/m248p4-local-catalogsearch-result-q-Motor-shaft-grinding-need-replacement.png |
 | Fitness equipment search | https://i.ibb.co/tM4SSkZk/image.png |
 | Fitness equipment Grid PLP | https://i.ibb.co/Wv20dddp/m248p4-local-catalogsearch-result-q-Need-something-for-strength-training.png |
+| Admin config — Search Analytics | https://i.ibb.co/ycpzSgKD/image.png |
+| Search analytics dashboard | https://i.ibb.co/4RBxpd70/AI-Commerce-Search-analytics-AI-Commerce-Assistant-Magento-Admin.png |
+| AI Commerce Assistant analytics | https://i.ibb.co/NdK7wGBD/AI-Commerce-Assistant.png |
