@@ -16,6 +16,9 @@ class Data extends AbstractHelper
     private const XML_PATH_TIMEOUT = 'aicommerceassistant/general/timeout';
     private const XML_PATH_ASSISTANT_URL = 'aicommerceassistant/general/assistant_url';
     private const XML_PATH_REDIRECT_CATALOG_SEARCH = 'aicommerceassistant/general/redirect_catalog_search';
+    private const XML_PATH_ANALYTICS_ENABLED = 'aicommerceassistant/analytics/enabled';
+    private const XML_PATH_ANALYTICS_DASHBOARD_URL = 'aicommerceassistant/analytics/dashboard_url';
+    private const XML_PATH_ANALYTICS_WINDOW_DAYS = 'aicommerceassistant/analytics/window_days';
 
     public function isEnabled(?int $storeId = null): bool
     {
@@ -109,5 +112,35 @@ class Data extends AbstractHelper
         return $this->isEnabled($storeId)
             && !$this->shouldRedirectSearch($storeId)
             && $this->getApiBaseUrl($storeId) !== '';
+    }
+
+    public function isAnalyticsEnabled(?int $storeId = null): bool
+    {
+        return $this->isEnabled($storeId)
+            && $this->scopeConfig->isSetFlag(
+                self::XML_PATH_ANALYTICS_ENABLED,
+                ScopeInterface::SCOPE_STORE,
+                $storeId
+            );
+    }
+
+    public function getAnalyticsDashboardUrl(?int $storeId = null): string
+    {
+        return trim((string) $this->scopeConfig->getValue(
+            self::XML_PATH_ANALYTICS_DASHBOARD_URL,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        ));
+    }
+
+    public function getAnalyticsWindowDays(?int $storeId = null): int
+    {
+        $days = (int) $this->scopeConfig->getValue(
+            self::XML_PATH_ANALYTICS_WINDOW_DAYS,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+
+        return $days > 0 ? $days : 30;
     }
 }

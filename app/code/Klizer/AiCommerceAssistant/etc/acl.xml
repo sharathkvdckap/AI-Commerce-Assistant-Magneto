@@ -9,6 +9,13 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
+                <resource id="Klizer_AiCommerceAssistant::analytics"
+                          title="AI Commerce Assistant"
+                          sortOrder="75">
+                    <resource id="Klizer_AiCommerceAssistant::analytics_dashboard"
+                              title="Search ROI Dashboard"
+                              sortOrder="10"/>
+                </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">

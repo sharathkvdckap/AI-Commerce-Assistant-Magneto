@@ -131,6 +131,9 @@ define([
             url = escapeHtml(item.productUrl || item.url || '#'),
             name = escapeHtml(item.name || ''),
             sku = escapeHtml(item.sku || ''),
+            productId = escapeHtml(item.id != null ? String(item.id) : ''),
+            listType = opts.alt ? 'alternative' : 'primary',
+            position = opts.position != null ? parseInt(opts.position, 10) : absoluteIndex,
             inStock = isInStock(item),
             priceText = inStock ? formatPrice(item) : '',
             image = escapeHtml(item.imageUrl || item.image || ''),
@@ -152,9 +155,20 @@ define([
             badge = '<span class="klizer-ai-card__badge klizer-ai-card__badge--value">' + $t('Best Value') + '</span>';
         }
 
+        if (!Number.isFinite(position) || position < 0) {
+            position = 0;
+        }
+
         return '<li class="klizer-ai-item' + (opts.carousel ? ' klizer-ai-carousel__item' : '') + '">' +
             '<a class="klizer-ai-card' + (inStock ? '' : ' klizer-ai-card--oos') + '" href="' + url +
-            '" title="' + name + '" data-price="' +
+            '" title="' + name + '" target="_blank" rel="noopener noreferrer" data-role="product-card"' +
+            ' data-sku="' + sku + '"' +
+            ' data-product-id="' + productId + '"' +
+            ' data-product-name="' + name + '"' +
+            ' data-product-url="' + url + '"' +
+            ' data-list-type="' + listType + '"' +
+            ' data-position="' + position + '"' +
+            ' data-price="' +
             (inStock && item.price != null ? Number(item.price) : '') +
             '" data-in-stock="' + (inStock ? '1' : '0') + '">' +
             '<span class="klizer-ai-card__media">' +
@@ -212,6 +226,10 @@ define([
             $memorySummary = $root.find('[data-role="memory-summary"]'),
             $memoryFacts = $root.find('[data-role="memory-facts"]'),
             sessionId = null,
+            searchId = null,
+            lastSource = null,
+            impressedKey = null,
+            lastClickKey = null,
             userId = getOrCreateUserId(config.userId),
             pendingMemory = null,
             allProducts = [],
@@ -231,6 +249,151 @@ define([
 
         function formKey() {
             return $.mage.cookies.get('form_key');
+        }
+
+        /**
+         * Fire-and-forget CTR events.
+         * Prefer sendBeacon (survives new-tab / navigation), then fetch+keepalive.
+         */
+        function trackEvents(events) {
+            var payload,
+                params,
+                body,
+                queued;
+
+            if (!config.trackUrl || !events || !events.length || !userId) {
+                return;
+            }
+
+            payload = {
+                form_key: formKey(),
+                userId: userId,
+                events: JSON.stringify(events)
+            };
+            if (sessionId) {
+                payload.sessionId = sessionId;
+            }
+            if (searchId) {
+                payload.searchId = searchId;
+            }
+            if (lastSource) {
+                payload.source = lastSource;
+            }
+
+            try {
+                params = new URLSearchParams();
+                Object.keys(payload).forEach(function (key) {
+                    params.set(key, payload[key]);
+                });
+                body = params.toString();
+
+                if (navigator.sendBeacon) {
+                    queued = navigator.sendBeacon(
+                        config.trackUrl,
+                        new Blob([body], {
+                            type: 'application/x-www-form-urlencoded; charset=UTF-8'
+                        })
+                    );
+                    if (queued) {
+                        return;
+                    }
+                }
+
+                if (window.fetch) {
+                    window.fetch(config.trackUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: body,
+                        credentials: 'same-origin',
+                        keepalive: true
+                    }).catch(function () { /* ignore */ });
+                    return;
+                }
+            } catch (e) { /* fall through */ }
+
+            $.ajax({
+                url: config.trackUrl,
+                method: 'POST',
+                data: payload,
+                dataType: 'json'
+            });
+        }
+
+        function trackImpressions(products, alternatives) {
+            var events = [],
+                key,
+                list = products || [],
+                alts = alternatives || [];
+
+            key = String(searchId || sessionId || 'none') + ':' +
+                list.map(function (p) { return p.sku; }).join(',') + ':' +
+                alts.map(function (p) { return p.sku; }).join(',');
+
+            if (impressedKey === key) {
+                return;
+            }
+            impressedKey = key;
+
+            list.forEach(function (p, position) {
+                if (!p || !p.sku) {
+                    return;
+                }
+                events.push({
+                    eventType: 'impression',
+                    sku: String(p.sku),
+                    productId: p.id != null ? String(p.id) : '',
+                    productName: p.name || '',
+                    productUrl: p.productUrl || p.url || '',
+                    listType: 'primary',
+                    position: position
+                });
+            });
+            alts.forEach(function (p, position) {
+                if (!p || !p.sku) {
+                    return;
+                }
+                events.push({
+                    eventType: 'impression',
+                    sku: String(p.sku),
+                    productId: p.id != null ? String(p.id) : '',
+                    productName: p.name || '',
+                    productUrl: p.productUrl || p.url || '',
+                    listType: 'alternative',
+                    position: position
+                });
+            });
+
+            trackEvents(events);
+        }
+
+        function trackProductClick($card) {
+            var sku = $.trim($card.attr('data-sku') || ''),
+                clickKey;
+
+            if (!sku) {
+                return;
+            }
+
+            // Deduplicate click + auxclick (middle-click) for the same card.
+            clickKey = sku + ':' + String(Date.now());
+            if (lastClickKey && lastClickKey.indexOf(sku + ':') === 0 &&
+                (Date.now() - parseInt(lastClickKey.split(':')[1], 10)) < 800) {
+                return;
+            }
+            lastClickKey = clickKey;
+
+            trackEvents([{
+                eventType: 'click',
+                sku: sku,
+                productId: $card.attr('data-product-id') || '',
+                productName: $card.attr('data-product-name') || '',
+                productUrl: $card.attr('data-product-url') || $card.attr('href') || '',
+                listType: $card.attr('data-list-type') === 'alternative' ? 'alternative' : 'primary',
+                position: parseInt($card.attr('data-position'), 10) || 0
+            }]);
         }
 
         function setStatus(message, isError) {
@@ -462,7 +625,7 @@ define([
                 pageItems.map(function (item, idx) {
                     // absoluteIndex preserves Best Match / Best Value on first AI hits only when still on page 1 & relevance
                     var absoluteIndex = (sortBy === 'relevance' && currentPage === 1) ? (start + idx) : -1;
-                    return productCard(item, absoluteIndex);
+                    return productCard(item, absoluteIndex, { position: start + idx });
                 }).join('') +
                 '</ol>';
 
@@ -504,8 +667,8 @@ define([
             }
 
             $alternativesTrack.html(
-                items.map(function (item) {
-                    return productCard(item, -1, { alt: true, carousel: true });
+                items.map(function (item, idx) {
+                    return productCard(item, -1, { alt: true, carousel: true, position: idx });
                 }).join('')
             );
             $alternativesCount
@@ -550,6 +713,7 @@ define([
                 $noExactBanner.prop('hidden', false);
                 $matchableBanner.prop('hidden', true);
                 renderAlternatives(allAlternatives);
+                trackImpressions([], allAlternatives);
                 return;
             }
 
@@ -576,6 +740,7 @@ define([
             $toolbar.prop('hidden', false);
             refreshProductView();
             renderAlternatives(allAlternatives);
+            trackImpressions(allProducts, allAlternatives);
         }
 
         function handlePayload(data) {
@@ -586,6 +751,12 @@ define([
 
             if (data.sessionId) {
                 sessionId = data.sessionId;
+            }
+            if (data.searchId) {
+                searchId = data.searchId;
+            }
+            if (data.source) {
+                lastSource = data.source;
             }
 
             renderGoal(data);
@@ -751,6 +922,21 @@ define([
             if (e.key === 'Enter') {
                 e.preventDefault();
                 beginWithQuery($entryInput.val());
+            }
+        });
+
+        // CTR: record product clicks — same tab, new tab (target=_blank), Ctrl/Cmd-click, middle-click.
+        $root.on('click auxclick', '[data-role="product-card"]', function (e) {
+            // Ignore non-primary aux buttons other than middle (button === 1).
+            if (e.type === 'auxclick' && e.button !== 1) {
+                return;
+            }
+            trackProductClick($(this));
+        });
+        // Middle-click often fires mousedown before navigation without a reliable click.
+        $root.on('mousedown', '[data-role="product-card"]', function (e) {
+            if (e.button === 1) {
+                trackProductClick($(this));
             }
         });
 

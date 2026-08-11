@@ -59,6 +59,11 @@ class Assistant extends Template
         return $this->getUrl('aicommerceassistant/context/search');
     }
 
+    public function getTrackUrl(): string
+    {
+        return $this->getUrl('aicommerceassistant/ajax/track');
+    }
+
     /**
      * Stable AI memory key for the current shopper.
      * Logged-in: customer_{id}. Guest: empty (JS generates a guest id).

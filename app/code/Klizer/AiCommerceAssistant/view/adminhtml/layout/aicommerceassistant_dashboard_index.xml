@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Klizer\AiCommerceAssistant\Block\Adminhtml\Dashboard"
+                   name="klizer.aicommerceassistant.analytics.dashboard"
+                   template="Klizer_AiCommerceAssistant::dashboard.phtml"/>
+        </referenceContainer>
+    </body>
+</page>
