@@ -1,18 +1,7 @@
 # Klizer_AiCommerceAssistant (Magento module)
 
 Magento 2 storefront module that embeds the **AI Commerce Assistant** on catalog search: header AI icon, clarifying questions, and matchable product PLP. Product data always comes from Magento; conversation logic runs on the Node API.
-
-## Docs (Node app root)
-
-Full **how to setup**, API, semantic search, and Magento wiring live in the Node repo:
-
-`/home/sharath/Documents/AI-Commerce-Assistant/`
-
-| Doc | Purpose |
-| --- | ------- |
-| `README.md` | How to setup (API, Ollama, Magento module, semantic) |
-| `DEMO.md` | Screenshots & Jumpshare videos (separate page) | 
-
+ 
 ## Quick Magento setup
 
 1. Start the Node API on `:3001` (see Node README).
@@ -45,3 +34,6 @@ Klizer/AiCommerceAssistant/
 ├── view/frontend/                # templates, JS, CSS
 └── docs/                         # wireframes
 ```
+## Further reading
+
+- **[magento/DEMO.md](./magento/DEMO.md)** (Magento) **demo screenshots** & videos (local run, Magento, apparel, semantic, industrial, fitness)
