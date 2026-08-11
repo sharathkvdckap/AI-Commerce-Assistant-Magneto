@@ -31,10 +31,6 @@ php bin/magento cache:flush
 
 ---
 
-## Analytics (Search ROI)
-
-Built into this module (formerly `Klizer_AiCommerceAnalytics`). One config section, one admin menu, shared API base URL.
-
 ### What it shows
 
 | Metric | Meaning |
@@ -137,11 +133,6 @@ Klizer/AiCommerceAssistant/
 └── docs/                              # wireframes
 ```
 
-## Note on AiCommerceAnalytics
-
-`Klizer_AiCommerceAnalytics` was merged into this module. Disable/remove the old module to avoid duplicate menus.
-
 ## Further reading
-
-- **[magento/DEMO.md](./magento/DEMO.md)** — demo screenshots & videos
+ 
 - **[DEMO.md](./DEMO.md)** — alternate demo walkthrough (if present)
