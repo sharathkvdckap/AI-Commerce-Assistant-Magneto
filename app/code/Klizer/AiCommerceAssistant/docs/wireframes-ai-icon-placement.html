@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wireframes — AI Commerce Assistant icon placement</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #666;
+      --line: #d8d8d8;
+      --paper: #f6f6f4;
+      --white: #fff;
+      --accent: #0f766e;
+      --accent-soft: #ecfdf8;
+      --warn: #9a3412;
+      --warn-soft: #fff7ed;
+      --good: #166534;
+      --good-soft: #ecfdf3;
+      --mid: #1d4ed8;
+      --mid-soft: #eff6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background: #eaeae6;
+      line-height: 1.45;
+    }
+    .page { max-width: 1100px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .lede { color: var(--muted); margin: 0 0 28px; max-width: 780px; }
+    .note {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+    .toc {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+    .toc ol { margin: 8px 0 0; padding-left: 20px; }
+    .toc a { color: var(--accent); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    h2 {
+      font-size: 18px;
+      margin: 40px 0 10px;
+      padding-top: 12px;
+      border-top: 1px solid #ccc;
+      scroll-margin-top: 16px;
+    }
+    h2:first-of-type { border-top: 0; padding-top: 0; }
+    h3 { font-size: 15px; margin: 18px 0 8px; }
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .pill-rec { background: var(--good-soft); color: var(--good); }
+    .pill-opt { background: var(--mid-soft); color: var(--mid); }
+    .pill-avoid { background: var(--warn-soft); color: var(--warn); }
+
+    table.rank {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      margin: 12px 0 20px;
+    }
+    table.rank th, table.rank td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.rank th { background: var(--paper); font-size: 12px; }
+    table.rank tr:last-child td { border-bottom: 0; }
+
+    .wf {
+      background: var(--white);
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 12px 0 18px;
+      max-width: 920px;
+    }
+    .wf-label {
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .browser {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fafafa;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; }
+    .url {
+      flex: 1;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .stage { padding: 16px; background: #f3f3f0; }
+
+    /* Magento-like chrome */
+    .hdr {
+      background: var(--white);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .logo {
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-size: 15px;
+    }
+    .search {
+      display: flex;
+      align-items: stretch;
+      border: 1px solid #999;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fff;
+      min-height: 36px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #888;
+      border: 0;
+    }
+    .search-btn {
+      background: #222;
+      color: #fff;
+      padding: 0 14px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+    }
+    .hdr-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .ai-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .ai-icon.sm { width: 28px; height: 28px; font-size: 10px; }
+    .ai-icon.outline {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+    }
+    .ai-icon .badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #dc2626;
+      border: 2px solid #fff;
+    }
+    .ai-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .callout {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: var(--accent-soft);
+      border: 1px dashed var(--accent);
+      border-radius: 4px;
+      font-size: 12px;
+      color: #115e59;
+    }
+    .callout b { color: var(--accent); }
+
+    .page-body {
+      background: var(--white);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      min-height: 160px;
+      padding: 16px;
+      position: relative;
+    }
+    .hero {
+      background: linear-gradient(180deg, #e8f5f2, #fff);
+      border: 1px solid #c5ddd8;
+      border-radius: 4px;
+      padding: 28px 20px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .hero h4 { margin: 0 0 6px; font-size: 18px; }
+    .hero p { margin: 0 0 14px; color: var(--muted); font-size: 13px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      height: 72px;
+      background: #fafafa;
+    }
+    .fab {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35);
+    }
+    .fab-label {
+      position: absolute;
+      right: 76px;
+      bottom: 28px;
+      background: #111;
+      color: #fff;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .panel {
+      position: absolute;
+      right: 16px;
+      bottom: 76px;
+      width: 280px;
+      background: #fff;
+      border: 1px solid #999;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .panel-h {
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+    }
+    .panel-b { padding: 12px; font-size: 12px; color: var(--muted); }
+    .panel-input {
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      padding: 8px;
+      margin-top: 8px;
+      color: #999;
+    }
+
+    .search-ai-inside {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 6px 0 0;
+      border-left: 1px solid var(--line);
+      background: #fafafa;
+    }
+    .plp-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 800px) {
+      .split { grid-template-columns: 1fr; }
+      .hdr { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .mobile {
+      max-width: 320px;
+      margin: 0 auto;
+      border: 2px solid #333;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .mobile-notch {
+      height: 22px;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 4px;
+    }
+    .mobile-notch span {
+      width: 60px;
+      height: 4px;
+      background: #444;
+      border-radius: 2px;
+    }
+    .mobile-hdr {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .mobile-body {
+      min-height: 280px;
+      padding: 12px;
+      background: #f3f3f0;
+      position: relative;
+    }
+    .pros {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0 0;
+      font-size: 12px;
+    }
+    .pros div {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      border-radius: 4px;
+    }
+    .pros .yes { border-left: 3px solid var(--good); }
+    .pros .no { border-left: 3px solid var(--warn); }
+    .pros strong { display: block; margin-bottom: 4px; }
+    pre.flow {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 14px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      overflow-x: auto;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>AI icon placement — recommendations + wireframes</h1>
+    <p class="lede">
+      Today the assistant only appears after Magento catalog search submit.
+      Adding a persistent entry icon makes the experience discoverable without forcing
+      every shopper through keyword search first.
+    </p>
+
+    <div class="note">
+      <strong>Recommendation:</strong> Ship <b>Option A (header search AI control)</b> as primary,
+      plus <b>Option B (floating assistant button)</b> for always-on access.
+      Skip homepage hero and mini-cart icons in v1 — they add clutter without improving the core path.
+    </div>
+
+    <div class="toc">
+      <strong>Contents</strong>
+      <ol>
+        <li><a href="#rank">Placement ranking</a></li>
+        <li><a href="#a">A — Header search AI control (recommended)</a></li>
+        <li><a href="#b">B — Floating action button + panel</a></li>
+        <li><a href="#c">C — Search-bar “Ask AI” chip</a></li>
+        <li><a href="#d">D — Category / PLP helper (optional later)</a></li>
+        <li><a href="#mobile">Mobile</a></li>
+        <li><a href="#wire">How to wire in Magento</a></li>
+        <li><a href="#avoid">What to avoid</a></li>
+      </ol>
+    </div>
+
+    <h2 id="rank">1. Placement ranking</h2>
+    <table class="rank">
+      <thead>
+        <tr>
+          <th>Priority</th>
+          <th>Placement</th>
+          <th>Why</th>
+          <th>Looks good?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill pill-rec">1 · Best</span></td>
+          <td>Inside / beside Magento header search</td>
+          <td>Matches mental model (“smarter search”). Lowest surprise. Reuses existing AI page flow.</td>
+          <td>Yes — feels native, not a third-party chatbot</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-rec">2 · Strong</span></td>
+          <td>Bottom-right floating AI button</td>
+          <td>Always available on PDP/PLP/CMS. Good for “help me find…” without leaving the page.</td>
+          <td>Yes if compact + theme-colored; ugly if oversized or chatty</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-opt">3 · Optional</span></td>
+          <td>Category / classic PLP toolbar chip</td>
+          <td>Helpful when browsing a category: “Ask AI to refine.”</td>
+          <td>Good as text chip, not a second FAB</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-avoid">Defer</span></td>
+          <td>Homepage hero CTA</td>
+          <td>Marketing value only; competes with merchandising.</td>
+          <td>Can look promotional, not product UI</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-avoid">Avoid</span></td>
+          <td>Mini-cart / account menu / every product card</td>
+          <td>Wrong context; icon spam.</td>
+          <td>No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- A -->
+    <h2 id="a">2. Option A — Header search AI control <span class="pill pill-rec">Recommended</span></h2>
+    <p style="font-size:14px;color:var(--muted);margin:0 0 8px">
+      Small circular AI mark next to search (or inside the search field’s trailing area).
+      Click → open AI entry page with empty query, or focus an “Ask AI” mode.
+    </p>
+
+    <div class="wf">
+      <div class="wf-label">
+        <span>Desktop · Magento header</span>
+        <span>Primary entry</span>
+      </div>
+      <div class="browser">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <div class="url">https://store.example /</div>
+      </div>
+      <div class="stage">
+        <div class="hdr">
+          <div class="logo">STORE</div>
+          <div class="search">
+            <div class="search-input">Search the catalog…</div>
+            <div class="search-ai-inside" title="Ask AI Assistant">
+              <span class="ai-icon sm outline">AI</span>
+            </div>
+            <div class="search-btn">Search</div>
+          </div>
+          <div class="hdr-actions">
+            <span>Account</span>
+            <span>Bag</span>
+            <span>Cart</span>
+          </div>
+        </div>
+        <div class="callout">
+          <b>Behavior:</b> Icon opens <code>/catalogsearch/result/?q=</code> AI page (or dedicated
+          <code>/aicommerceassistant/</code> landing) with empty query + prompt “What are you looking for?”.
+          Typing + Search keeps current AI-replaced PLP flow.
+        </div>
+      </div>
+    </div>
+
+    <div class="pros">
+      <div class="yes">
+        <strong>Do</strong>
+        Use a quiet teal/brand circle or sparkle glyph. Tooltip: “Ask AI to shop”. 28–36px.
+      </div>
+      <div class="no">
+        <strong>Don’t</strong>
+        Giant gradient orb, bouncing animation, or “Chat with us” copy (sounds like support chat).
+      </div>
+    </div>
+
+    <!-- B -->
+    <h2 id="b">3. Option B — Floating button + slim panel <span class="pill pill-rec">Pair with A</span></h2>
+    <p style="font-size:14px;color:var(--muted);margin:0 0 8px">
+      Persistent bottom-right control on all storefront pages. Opens a compact starter panel,
+      then routes into the full AI search experience.
+    </p>
+
+    <div class="wf">
+      <div class="wf-label">
+        <span>Desktop · any page (PDP example)</span>
+        <span>Secondary always-on entry</span>
+      </div>
+      <div class="browser">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <div class="url">https://store.example / product / yoga-pants</div>
+      </div>
+      <div class="stage">
+        <div class="hdr">
+          <div class="logo">STORE</div>
+          <div class="search">
+            <div class="search-input">Search…</div>
+            <div class="search-btn">Go</div>
+          </div>
+          <div class="hdr-actions"><span class="ai-icon sm outline">AI</span><span>Cart</span></div>
+        </div>
+        <div class="page-body" style="min-height:260px">
+          <div style="display:grid;grid-template-columns:140px 1fr;gap:16px">
+            <div style="background:#e5e5e5;height:140px;border-radius:4px"></div>
+            <div>
+              <div style="font-weight:700;margin-bottom:6px">Blue Yoga Pants</div>
+              <div style="color:#666;font-size:13px;margin-bottom:10px">$48 · In stock</div>
+              <div style="height:28px;width:120px;background:#222;border-radius:3px"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-h">
+              <span>AI Shopping Assistant</span>
+              <span style="opacity:.8">✕</span>
+            </div>
+            <div class="panel-b">
+              Describe what you need in plain language.
+              <div class="panel-input">e.g. yoga pants under $50 for women</div>
+              <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+                <span class="ai-chip" style="font-size:11px;padding:4px 8px">Find similar</span>
+                <span class="ai-chip" style="font-size:11px;padding:4px 8px">Gift ideas</span>
+              </div>
+            </div>
+          </div>
+          <div class="fab-label">Need help finding?</div>
+          <div class="fab">AI</div>
+        </div>
+        <div class="callout">
+          <b>Behavior:</b> FAB toggles panel. Submit → same Magento AI results page with <code>q=…</code>.
+          On AI results page, hide FAB to avoid double UI.
+        </div>
+      </div>
+    </div>
+
+    <!-- C -->
+    <h2 id="c">4. Option C — “Ask AI” chip beside search <span class="pill pill-opt">Alt to A</span></h2>
+    <div class="wf">
+      <div class="wf-label">
+        <span>Desktop · labeled chip (more explicit)</span>
+        <span>Good if icon-alone feels unclear</span>
+      </div>
+      <div class="stage">
+        <div class="hdr" style="grid-template-columns:100px 1fr auto auto">
+          <div class="logo">STORE</div>
+          <div class="search">
+            <div class="search-input">Search the catalog…</div>
+            <div class="search-btn">Search</div>
+          </div>
+          <span class="ai-chip"><span class="ai-icon sm">AI</span> Ask AI</span>
+          <div class="hdr-actions"><span>Cart</span></div>
+        </div>
+        <div class="callout">
+          Use this if A/B testing shows shoppers don’t understand a bare icon.
+          Slightly wider header footprint.
+        </div>
+      </div>
+    </div>
+
+    <!-- D -->
+    <h2 id="d">5. Option D — Category / classic PLP helper <span class="pill pill-opt">Later</span></h2>
+    <div class="wf">
+      <div class="wf-label">
+        <span>Category page when classic Magento PLP is still shown</span>
+        <span>Contextual assist</span>
+      </div>
+      <div class="stage">
+        <div class="page-body">
+          <div class="plp-bar">
+            <strong>Women → Pants · 128 items</strong>
+            <span class="ai-chip">◎ Ask AI to refine</span>
+          </div>
+          <div class="grid">
+            <div class="card"></div><div class="card"></div>
+            <div class="card"></div><div class="card"></div>
+          </div>
+          <div class="callout">
+            Pre-fills context: category = Women Pants. Opens AI clarify flow with that seed.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile -->
+    <h2 id="mobile">6. Mobile</h2>
+    <div class="split">
+      <div class="wf">
+        <div class="wf-label"><span>Mobile · header</span><span>Icon in search row</span></div>
+        <div class="mobile">
+          <div class="mobile-notch"><span></span></div>
+          <div class="mobile-hdr">
+            <strong style="font-size:13px">STORE</strong>
+            <div class="search" style="flex:1">
+              <div class="search-input" style="font-size:12px;padding:6px 8px">Search…</div>
+              <div class="search-ai-inside"><span class="ai-icon sm outline">AI</span></div>
+            </div>
+          </div>
+          <div class="mobile-body">
+            <div class="grid" style="grid-template-columns:1fr 1fr">
+              <div class="card"></div><div class="card"></div>
+            </div>
+            <div class="fab" style="width:48px;height:48px;right:12px;bottom:12px">AI</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>Mobile rules</h3>
+        <ul style="font-size:13px;color:var(--muted);padding-left:18px">
+          <li>Keep one FAB max; don’t stack chat + AI + back-to-top.</li>
+          <li>Header icon stays 28px so search field remains usable.</li>
+          <li>Panel should be full-width bottom sheet on mobile, not a 280px card.</li>
+          <li>Hide FAB when keyboard is open / on checkout.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Wire -->
+    <h2 id="wire">7. How to wire in Magento (fit this module)</h2>
+    <pre class="flow">Layout: default.xml (or theme header)
+  └─ block: klizer.aicommerceassistant.launcher
+       template: launcher.phtml  → icon + optional FAB
+       JS: launcher.js
+            ├─ click header AI  → redirect to AI entry URL (empty q or landing)
+            └─ click FAB        → open panel → submit → catalogsearch/result/?q=…
+
+Reuse existing:
+  • Module enable flag (aicommerceassistant/general/enabled)
+  • AI results page (already replaces catalog search)
+  • assistant.js start/message/context flow
+
+Do not rebuild chat inside the FAB for v1 — use it as a doorway into the AI page.</pre>
+
+    <div class="pros">
+      <div class="yes">
+        <strong>Icon design</strong>
+        Solid brand circle + “AI” or simple sparkle SVG. One accent color matching theme (teal/navy). No purple glow, no bounce loop.
+      </div>
+      <div class="yes">
+        <strong>Copy</strong>
+        “Ask AI to shop” / “Find with AI” — shopping language, not “Chatbot” or “Support”.
+      </div>
+    </div>
+
+    <!-- Avoid -->
+    <h2 id="avoid">8. What to avoid</h2>
+    <table class="rank">
+      <thead>
+        <tr><th>Pattern</th><th>Why it hurts</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Intercom-style chat bubble everywhere</td>
+          <td>Shoppers think it’s customer support, not product discovery</td>
+        </tr>
+        <tr>
+          <td>Icon on every product card</td>
+          <td>Visual noise; kills merchandising</td>
+        </tr>
+        <tr>
+          <td>Auto-open panel on page load</td>
+          <td>Aggressive; hurts conversion and trust</td>
+        </tr>
+        <tr>
+          <td>Different AI UIs (header + FAB + hero + PLP)</td>
+          <td>Looks unfinished; pick 1–2 surfaces max</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note" style="margin-top:28px">
+      <strong>Ship order:</strong>
+      (1) Header search AI icon → empty-query AI page,
+      (2) FAB on non-AI pages,
+      (3) Category “Ask AI to refine” only if classic PLP still exists alongside AI search.
+    </div>
+  </div>
+</body>
+</html>

@@ -173,6 +173,10 @@ define([
     return function (config, element) {
         var $root = $(element),
             $status = $root.find('[data-role="status"]'),
+            $entry = $root.find('[data-role="entry"]'),
+            $entryInput = $root.find('[data-role="entry-input"]'),
+            $querybar = $root.find('[data-role="querybar"]'),
+            $querytext = $root.find('[data-role="querytext"]'),
             $goal = $root.find('[data-role="goal"]'),
             $goalTitle = $root.find('[data-role="goal-title"]'),
             $goalSummary = $root.find('[data-role="goal-summary"]'),
@@ -234,6 +238,33 @@ define([
                 .text(message || '')
                 .toggleClass('is-error', !!isError)
                 .prop('hidden', !message);
+        }
+
+        function showQueryBar(text) {
+            $querytext.text(text || '');
+            $querybar.prop('hidden', !text);
+        }
+
+        function beginWithQuery(nextQuery) {
+            query = $.trim(nextQuery || '');
+            if (!query) {
+                setStatus($t('Enter a search query to use the AI assistant.'), true);
+                return;
+            }
+
+            $entry.prop('hidden', true);
+            showQueryBar(query);
+            setStatus('', false);
+
+            try {
+                if (window.history && window.history.replaceState) {
+                    var url = new URL(window.location.href);
+                    url.searchParams.set('q', query);
+                    window.history.replaceState({}, '', url.toString());
+                }
+            } catch (e) {}
+
+            start();
         }
 
         function renderGoal(data) {
@@ -665,9 +696,15 @@ define([
          */
         function start() {
             if (!query) {
-                setStatus($t('Enter a search query to use the AI assistant.'), true);
+                $entry.prop('hidden', false);
+                if ($entryInput.length) {
+                    $entryInput.trigger('focus');
+                }
                 return;
             }
+
+            $entry.prop('hidden', true);
+            showQueryBar(query);
 
             if (!config.contextSearchUrl || !userId) {
                 startAssistant(null);
@@ -705,6 +742,17 @@ define([
                 })
                 .fail(requestFailed);
         }
+
+        $root.find('[data-role="entry-send"]').on('click', function () {
+            beginWithQuery($entryInput.val());
+        });
+
+        $entryInput.on('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                beginWithQuery($entryInput.val());
+            }
+        });
 
         $root.find('[data-role="memory-continue"]').on('click', function () {
             if (!pendingMemory) {

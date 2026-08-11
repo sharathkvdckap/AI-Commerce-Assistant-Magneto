@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Klizer. All rights reserved.
+ *
+ * Standalone AI entry page (header icon with empty search).
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Klizer_AiCommerceAssistant::css/assistant.css"/>
+    </head>
+    <body>
+        <attribute name="class" value="klizer-ai-search-page"/>
+        <referenceBlock name="page.main.title" remove="true"/>
+        <referenceContainer name="content">
+            <block class="Klizer\AiCommerceAssistant\Block\Result\Assistant"
+                   name="klizer.aicommerceassistant.entry"
+                   template="Klizer_AiCommerceAssistant::result/assistant.phtml"
+                   before="-"/>
+        </referenceContainer>
+    </body>
+</page>
