@@ -1,8 +1,7 @@
 # Magento demo — screenshots & videos
 
 Storefront and admin visuals for **AI Commerce Assistant** on Magento 2: module config, search redirect, clarifying Q&A, PLP grid, semantic badges, and vertical demos.
-
-App / Node run screenshots: [../DEMO.md](../DEMO.md)  
+ 
 Setup guide: [../README.md](../README.md)
 
 ---
