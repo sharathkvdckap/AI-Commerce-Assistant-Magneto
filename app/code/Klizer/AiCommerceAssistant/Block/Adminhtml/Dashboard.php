@@ -45,11 +45,20 @@ class Dashboard extends Template
      */
     public function getSummaryPayload(): array
     {
+        if (!$this->config->isEnabled()) {
+            return [
+                'ok' => false,
+                'error' => (string) __(
+                    'Enable AI Commerce Assistant under Stores → Configuration → Klizer → AI Commerce Assistant. Analytics only works when the assistant is enabled.'
+                ),
+            ];
+        }
+
         if (!$this->config->isAnalyticsEnabled()) {
             return [
                 'ok' => false,
                 'error' => (string) __(
-                    'Enable Search Analytics under Stores → Configuration → Klizer → AI Commerce Assistant.'
+                    'Enable Analytics Menu under Stores → Configuration → Klizer → AI Commerce Assistant → Search Analytics (Admin ROI).'
                 ),
             ];
         }
@@ -59,7 +68,7 @@ class Dashboard extends Template
             return [
                 'ok' => false,
                 'error' => (string) __(
-                    'Configure AI API Base URL under Stores → Configuration → Klizer → AI Commerce Assistant.'
+                    'Configure AI API Base URL under Stores → Configuration → Klizer → AI Commerce Assistant → General.'
                 ),
             ];
         }

@@ -150,6 +150,10 @@ class Data extends AbstractHelper
             && $this->getApiBaseUrl($storeId) !== '';
     }
 
+    /**
+     * Admin Search ROI dashboard / analytics menu.
+     * Requires storefront AI Commerce Assistant to be enabled first.
+     */
     public function isAnalyticsEnabled(?int $storeId = null): bool
     {
         return $this->isEnabled($storeId)

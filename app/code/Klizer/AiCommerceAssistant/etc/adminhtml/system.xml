@@ -80,7 +80,7 @@
                 <field id="enabled" translate="label comment" type="select" sortOrder="10"
                        showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enable Analytics Menu</label>
-                    <comment>Shows Admin menu: AI Commerce Assistant → Search ROI Dashboard. Uses the same AI API Base URL above.</comment>
+                    <comment>Shows Admin menu: AI Commerce Assistant → Search ROI Dashboard. Requires Enable AI Commerce Assistant = Yes. Uses the same AI API Base URL above.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="general/enabled">1</field>
