@@ -57,6 +57,22 @@
                         <field id="redirect_catalog_search">1</field>
                     </depends>
                 </field>
+                <field id="customer_id_hmac_secret" translate="label comment" type="text" sortOrder="60"
+                       showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Customer ID HMAC Secret</label>
+                    <comment>Must match Node CUSTOMER_ID_HMAC_SECRET exactly. Signs logged-in customer_id for context memory. Leave empty only for local unsigned-customer testing.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="customer_id_token_ttl" translate="label comment" type="text" sortOrder="70"
+                       showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Customer Identity Token TTL (seconds)</label>
+                    <comment>Lifetime of HMAC proof (cid_exp). Default 3600.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="analytics" translate="label" sortOrder="20"
                    showInDefault="1" showInWebsite="1" showInStore="1">

@@ -28,19 +28,19 @@ class Client
      * POST /api/assistant/start
      *
      * @param array<string, mixed> $reuseFilters
+     * @param array{customerId: string, exp: int, sig: string}|null $identity
      * @return array<string, mixed>
      */
     public function start(
         string $query,
         string $userId = '',
         array $reuseFilters = [],
-        string $reuseHistoryId = ''
+        string $reuseHistoryId = '',
+        ?array $identity = null
     ): array {
         $payload = ['query' => $query];
+        $this->attachIdentity($payload, $userId, $identity);
 
-        if ($userId !== '') {
-            $payload['userId'] = $userId;
-        }
         if ($reuseFilters !== []) {
             $payload['reuseFilters'] = $reuseFilters;
         }
@@ -54,18 +54,20 @@ class Client
     /**
      * POST /api/assistant/message
      *
+     * @param array{customerId: string, exp: int, sig: string}|null $identity
      * @return array<string, mixed>
      */
-    public function message(string $sessionId, string $answer, string $userId = ''): array
-    {
+    public function message(
+        string $sessionId,
+        string $answer,
+        string $userId = '',
+        ?array $identity = null
+    ): array {
         $payload = [
             'sessionId' => $sessionId,
             'answer' => $answer,
         ];
-
-        if ($userId !== '') {
-            $payload['userId'] = $userId;
-        }
+        $this->attachIdentity($payload, $userId, $identity);
 
         return $this->postJson('/api/assistant/message', $payload);
     }
@@ -84,20 +86,25 @@ class Client
     /**
      * POST /api/context/search — find a similar previous shopping session.
      *
+     * @param array{customerId: string, exp: int, sig: string}|null $identity
      * @return array<string, mixed>
      */
-    public function contextSearch(string $userId, string $query): array
-    {
-        return $this->postJson('/api/context/search', [
-            'userId' => $userId,
-            'query' => $query,
-        ]);
+    public function contextSearch(
+        string $userId,
+        string $query,
+        ?array $identity = null
+    ): array {
+        $payload = ['query' => $query];
+        $this->attachIdentity($payload, $userId, $identity);
+
+        return $this->postJson('/api/context/search', $payload);
     }
 
     /**
      * POST /api/analytics/track — product impressions & clicks (CTR).
      *
      * @param list<array<string, mixed>> $events
+     * @param array{customerId: string, exp: int, sig: string}|null $identity
      * @return array<string, mixed>
      */
     public function trackAnalytics(
@@ -105,12 +112,14 @@ class Client
         array $events,
         ?string $sessionId = null,
         ?string $searchId = null,
-        ?string $source = null
+        ?string $source = null,
+        ?array $identity = null
     ): array {
         $payload = [
-            'userId' => $userId,
             'events' => $events,
         ];
+        $this->attachIdentity($payload, $userId, $identity);
+
         if ($sessionId !== null && $sessionId !== '') {
             $payload['sessionId'] = $sessionId;
         }
@@ -126,6 +135,28 @@ class Client
 
     /**
      * @param array<string, mixed> $payload
+     * @param array{customerId: string, exp: int, sig: string}|null $identity
+     */
+    private function attachIdentity(array &$payload, string $userId, ?array $identity): void
+    {
+        if ($userId !== '') {
+            $payload['userId'] = $userId;
+        }
+        if ($identity !== null
+            && isset($identity['customerId'], $identity['exp'], $identity['sig'])
+            && $identity['customerId'] !== ''
+            && $identity['sig'] !== ''
+        ) {
+            $payload['identity'] = [
+                'customerId' => (string) $identity['customerId'],
+                'exp' => (int) $identity['exp'],
+                'sig' => (string) $identity['sig'],
+            ];
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $payload
      * @return array<string, mixed>
      */
     private function postJson(string $path, array $payload): array
@@ -137,6 +168,14 @@ class Client
 
         $url = $base . $path;
         $body = $this->json->serialize($payload);
+
+        $this->logger->warning('AiCommerceAssistant → Node', [
+            'path' => $path,
+            'userId' => $payload['userId'] ?? null,
+            'identityAttached' => isset($payload['identity']),
+            'identityCustomerId' => $payload['identity']['customerId'] ?? null,
+            'identityExp' => $payload['identity']['exp'] ?? null,
+        ]);
 
         $this->curl->setTimeout($this->config->getTimeout());
         $this->curl->addHeader('Content-Type', 'application/json');

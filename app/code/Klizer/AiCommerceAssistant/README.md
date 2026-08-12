@@ -23,11 +23,19 @@ php bin/magento cache:flush
 3. **Stores → Configuration → Klizer → AI Commerce Assistant**
    - Enable: **Yes**
    - AI API Base URL: `http://127.0.0.1:3001`
+   - **Customer ID HMAC Secret**: same value as Node `CUSTOMER_ID_HMAC_SECRET` (required when Node has the secret set)
+   - **Customer Identity Token TTL**: `3600` (optional)
    - Redirect to External Assistant UI: **No** (on-site AI PLP)
    - See **Search Analytics** settings below
 4. Storefront: use the **AI** icon in header search, or submit a natural-language query.  
+   - Logged-in customers are keyed as `customer_{id}` with an HMAC proof Magento signs server-side.  
+   - Guests use a browser `guest_*` id.  
 5. Admin: **AI Commerce Assistant → Search ROI Dashboard**  
    URL: `/admin/aicommerceassistant/dashboard/index`
+
+### Customer identity (HMAC)
+
+Node and Magento share one secret. Magento signs `v1|{customerId}|{exp}` with HMAC-SHA256 and sends `{ userId, identity: { customerId, exp, sig } }` on assistant / context / analytics API calls. External redirect mode also appends `customer_id`, `cid_exp`, `cid_sig` to the React URL.
 
 ---
 

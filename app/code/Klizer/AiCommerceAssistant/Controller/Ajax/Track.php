@@ -81,6 +81,7 @@ class Track implements HttpPostActionInterface, CsrfAwareActionInterface
             ]);
         }
 
+        $identity = $this->userIdentity->getIdentityProof();
         $sessionId = trim((string) $this->request->getParam('sessionId', ''));
         $searchId = trim((string) $this->request->getParam('searchId', ''));
         $source = trim((string) $this->request->getParam('source', ''));
@@ -91,7 +92,8 @@ class Track implements HttpPostActionInterface, CsrfAwareActionInterface
                 $events,
                 $sessionId !== '' ? $sessionId : null,
                 $searchId !== '' ? $searchId : null,
-                $source !== '' ? $source : null
+                $source !== '' ? $source : null,
+                $identity
             );
 
             return $result->setData([

@@ -126,6 +126,71 @@ define([
         return item.inStock !== false && item.in_stock !== false;
     }
 
+    /**
+     * Hybrid/mixed: semantic % first, Magento reason second.
+     * Magento-only: Magento reason only.
+     */
+    function reasonLabels(item) {
+        var reasons = Array.isArray(item.reasons) ? item.reasons : [],
+            semantic = null,
+            magento = null,
+            i,
+            text;
+
+        for (i = 0; i < reasons.length; i++) {
+            text = String(reasons[i] || '').trim();
+            if (!text) {
+                continue;
+            }
+            if (/^Semantic match/i.test(text)) {
+                if (!semantic) {
+                    semantic = text;
+                }
+            } else if (!magento) {
+                magento = text.replace(/^Magento category:\s*/i, '');
+            }
+        }
+
+        return { semantic: semantic, magento: magento };
+    }
+
+    function reasonBadgesHtml(item, source, matchType) {
+        var labels = reasonLabels(item),
+            html = '',
+            preferSemantic = Boolean(labels.semantic) && (
+                source === 'hybrid' ||
+                source === 'semantic' ||
+                matchType === 'mixed' ||
+                matchType === 'recommended'
+            );
+
+        if (preferSemantic && labels.semantic) {
+            html += '<span class="klizer-ai-card__cat klizer-ai-card__cat--semantic">' +
+                escapeHtml(labels.semantic) +
+                '</span>';
+            if (labels.magento) {
+                html += '<span class="klizer-ai-card__cat klizer-ai-card__cat--magento">' +
+                    escapeHtml(labels.magento) +
+                    '</span>';
+            }
+            return html;
+        }
+
+        if (labels.magento) {
+            return '<span class="klizer-ai-card__cat">' +
+                escapeHtml(labels.magento) +
+                '</span>';
+        }
+
+        if (labels.semantic) {
+            return '<span class="klizer-ai-card__cat klizer-ai-card__cat--semantic">' +
+                escapeHtml(labels.semantic) +
+                '</span>';
+        }
+
+        return '';
+    }
+
     function productCard(item, absoluteIndex, options) {
         var opts = options || {},
             url = escapeHtml(item.productUrl || item.url || '#'),
@@ -143,9 +208,7 @@ define([
                 : '<span class="klizer-ai-card__stock klizer-ai-card__stock--oos">' +
                     $t('Out of Stock') +
                     '</span>',
-            category = (item.reasons && item.reasons[0])
-                ? '<span class="klizer-ai-card__cat">' + escapeHtml(String(item.reasons[0]).replace(/^Magento category:\s*/i, '')) + '</span>'
-                : '';
+            category = reasonBadgesHtml(item, opts.source, opts.matchType);
 
         if (opts.alt) {
             badge = '<span class="klizer-ai-card__badge klizer-ai-card__badge--alt">' + $t('Alt') + '</span>';
@@ -228,6 +291,7 @@ define([
             sessionId = null,
             searchId = null,
             lastSource = null,
+            lastMatchType = null,
             impressedKey = null,
             lastClickKey = null,
             userId = getOrCreateUserId(config.userId),
@@ -625,7 +689,11 @@ define([
                 pageItems.map(function (item, idx) {
                     // absoluteIndex preserves Best Match / Best Value on first AI hits only when still on page 1 & relevance
                     var absoluteIndex = (sortBy === 'relevance' && currentPage === 1) ? (start + idx) : -1;
-                    return productCard(item, absoluteIndex, { position: start + idx });
+                    return productCard(item, absoluteIndex, {
+                        position: start + idx,
+                        source: lastSource,
+                        matchType: lastMatchType
+                    });
                 }).join('') +
                 '</ol>';
 
@@ -668,7 +736,13 @@ define([
 
             $alternativesTrack.html(
                 items.map(function (item, idx) {
-                    return productCard(item, -1, { alt: true, carousel: true, position: idx });
+                    return productCard(item, -1, {
+                        alt: true,
+                        carousel: true,
+                        position: idx,
+                        source: lastSource,
+                        matchType: lastMatchType
+                    });
                 }).join('')
             );
             $alternativesCount
@@ -757,6 +831,9 @@ define([
             }
             if (data.source) {
                 lastSource = data.source;
+            }
+            if (data.matchType) {
+                lastMatchType = data.matchType;
             }
 
             renderGoal(data);

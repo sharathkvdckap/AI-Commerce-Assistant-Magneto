@@ -14,6 +14,8 @@
                 <timeout>90</timeout>
                 <redirect_catalog_search>0</redirect_catalog_search>
                 <assistant_url>http://localhost:5173/ai-assistant</assistant_url>
+                <customer_id_hmac_secret></customer_id_hmac_secret>
+                <customer_id_token_ttl>3600</customer_id_token_ttl>
             </general>
             <analytics>
                 <enabled>1</enabled>

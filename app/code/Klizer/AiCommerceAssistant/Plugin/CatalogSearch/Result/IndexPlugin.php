@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Klizer\AiCommerceAssistant\Plugin\CatalogSearch\Result;
 
 use Klizer\AiCommerceAssistant\Helper\Data as AssistantHelper;
+use Klizer\AiCommerceAssistant\Model\UserIdentity;
 use Magento\CatalogSearch\Controller\Result\Index;
 use Magento\Framework\Controller\Result\RedirectFactory;
 
@@ -17,7 +18,8 @@ class IndexPlugin
 {
     public function __construct(
         private readonly AssistantHelper $assistantHelper,
-        private readonly RedirectFactory $redirectFactory
+        private readonly RedirectFactory $redirectFactory,
+        private readonly UserIdentity $userIdentity
     ) {
     }
 
@@ -31,7 +33,11 @@ class IndexPlugin
         }
 
         $query = trim((string) $subject->getRequest()->getParam('q', ''));
-        $target = $this->assistantHelper->buildAssistantUrl($query !== '' ? $query : null);
+        $target = $this->assistantHelper->buildAssistantUrl(
+            $query !== '' ? $query : null,
+            null,
+            $this->userIdentity->getRedirectQueryParams()
+        );
 
         if ($target === '') {
             return $proceed();
