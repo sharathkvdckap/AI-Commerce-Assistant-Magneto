@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Klizer\AiCommerceAssistant\Plugin\Search;
 
 use Klizer\AiCommerceAssistant\Helper\Data as AssistantHelper;
+use Klizer\AiCommerceAssistant\Model\UserIdentity;
 use Magento\Search\Helper\Data as SearchHelper;
 
 /**
@@ -16,7 +17,8 @@ use Magento\Search\Helper\Data as SearchHelper;
 class DataPlugin
 {
     public function __construct(
-        private readonly AssistantHelper $assistantHelper
+        private readonly AssistantHelper $assistantHelper,
+        private readonly UserIdentity $userIdentity
     ) {
     }
 
@@ -34,7 +36,9 @@ class DataPlugin
         }
 
         $url = $this->assistantHelper->buildAssistantUrl(
-            $query !== null && $query !== '' ? (string) $query : null
+            $query !== null && $query !== '' ? (string) $query : null,
+            null,
+            $this->userIdentity->getRedirectQueryParams()
         );
 
         return $url !== '' ? $url : $proceed($query);

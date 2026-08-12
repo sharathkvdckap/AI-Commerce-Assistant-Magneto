@@ -16,6 +16,8 @@ class Data extends AbstractHelper
     private const XML_PATH_TIMEOUT = 'aicommerceassistant/general/timeout';
     private const XML_PATH_ASSISTANT_URL = 'aicommerceassistant/general/assistant_url';
     private const XML_PATH_REDIRECT_CATALOG_SEARCH = 'aicommerceassistant/general/redirect_catalog_search';
+    private const XML_PATH_CUSTOMER_ID_HMAC_SECRET = 'aicommerceassistant/general/customer_id_hmac_secret';
+    private const XML_PATH_CUSTOMER_ID_TOKEN_TTL = 'aicommerceassistant/general/customer_id_token_ttl';
     private const XML_PATH_ANALYTICS_ENABLED = 'aicommerceassistant/analytics/enabled';
     private const XML_PATH_ANALYTICS_DASHBOARD_URL = 'aicommerceassistant/analytics/dashboard_url';
     private const XML_PATH_ANALYTICS_WINDOW_DAYS = 'aicommerceassistant/analytics/window_days';
@@ -77,21 +79,55 @@ class Data extends AbstractHelper
         );
     }
 
-    public function buildAssistantUrl(?string $query = null, ?int $storeId = null): string
+    /**
+     * Shared with Node CUSTOMER_ID_HMAC_SECRET. Empty = unsigned customer ids (dev only).
+     */
+    public function getCustomerIdHmacSecret(?int $storeId = null): string
     {
+        return trim((string) $this->scopeConfig->getValue(
+            self::XML_PATH_CUSTOMER_ID_HMAC_SECRET,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        ));
+    }
+
+    public function getCustomerIdTokenTtlSec(?int $storeId = null): int
+    {
+        $ttl = (int) $this->scopeConfig->getValue(
+            self::XML_PATH_CUSTOMER_ID_TOKEN_TTL,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+
+        return $ttl > 0 ? $ttl : 3600;
+    }
+
+    /**
+     * @param array<string, scalar> $extraQuery Extra query params (customer_id, cid_exp, cid_sig, …)
+     */
+    public function buildAssistantUrl(
+        ?string $query = null,
+        ?int $storeId = null,
+        array $extraQuery = []
+    ): string {
         $base = $this->getAssistantUrl($storeId);
         if ($base === '') {
             return '';
         }
 
+        $params = $extraQuery;
         $query = $query !== null ? trim($query) : '';
-        if ($query === '') {
+        if ($query !== '') {
+            $params = ['q' => $query] + $params;
+        }
+
+        if ($params === []) {
             return $base;
         }
 
         $separator = str_contains($base, '?') ? '&' : '?';
 
-        return $base . $separator . 'q=' . rawurlencode($query);
+        return $base . $separator . http_build_query($params);
     }
 
     /**

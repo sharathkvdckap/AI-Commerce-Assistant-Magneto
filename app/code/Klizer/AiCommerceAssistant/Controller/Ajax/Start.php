@@ -76,6 +76,7 @@ class Start implements HttpPostActionInterface, CsrfAwareActionInterface
         $userId = $this->userIdentity->resolve(
             trim((string) $this->request->getParam('userId', ''))
         );
+        $identity = $this->userIdentity->getIdentityProof();
         $reuseHistoryId = trim((string) $this->request->getParam('reuseHistoryId', ''));
 
         try {
@@ -83,11 +84,14 @@ class Start implements HttpPostActionInterface, CsrfAwareActionInterface
                 $query,
                 $userId,
                 $this->readReuseFilters(),
-                $reuseHistoryId
+                $reuseHistoryId,
+                $identity
             );
 
             return $result->setData([
                 'success' => true,
+                'userId' => $userId,
+                'identityAttached' => $identity !== null,
                 'data' => $data,
             ]);
         } catch (\Throwable $e) {

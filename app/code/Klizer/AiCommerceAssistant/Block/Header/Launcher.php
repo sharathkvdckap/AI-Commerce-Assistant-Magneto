@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Klizer\AiCommerceAssistant\Block\Header;
 
 use Klizer\AiCommerceAssistant\Helper\Data as Config;
+use Klizer\AiCommerceAssistant\Model\UserIdentity;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Search\Helper\Data as SearchHelper;
@@ -20,6 +21,7 @@ class Launcher extends Template
         Context $context,
         private readonly Config $config,
         private readonly SearchHelper $searchHelper,
+        private readonly UserIdentity $userIdentity,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -49,7 +51,11 @@ class Launcher extends Template
     public function getEntryUrl(): string
     {
         if ($this->config->shouldRedirectSearch()) {
-            return $this->config->buildAssistantUrl(null);
+            return $this->config->buildAssistantUrl(
+                null,
+                null,
+                $this->userIdentity->getRedirectQueryParams()
+            );
         }
 
         return $this->getUrl('aicommerceassistant');

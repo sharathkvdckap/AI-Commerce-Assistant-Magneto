@@ -67,6 +67,7 @@ class Search implements HttpPostActionInterface, CsrfAwareActionInterface
         $userId = $this->userIdentity->resolve(
             trim((string) $this->request->getParam('userId', ''))
         );
+        $identity = $this->userIdentity->getIdentityProof();
 
         // No identity or no query means there is nothing to match against.
         if ($query === '' || $userId === '') {
@@ -77,10 +78,12 @@ class Search implements HttpPostActionInterface, CsrfAwareActionInterface
         }
 
         try {
-            $data = $this->client->contextSearch($userId, $query);
+            $data = $this->client->contextSearch($userId, $query, $identity);
 
             return $result->setData([
                 'success' => true,
+                'userId' => $userId,
+                'identityAttached' => $identity !== null,
                 'data' => $data,
             ]);
         } catch (\Throwable $e) {

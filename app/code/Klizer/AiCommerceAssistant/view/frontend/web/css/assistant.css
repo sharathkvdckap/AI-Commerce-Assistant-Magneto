@@ -545,10 +545,25 @@ body.klizer-ai-search-page .sidebar.sidebar-additional {
     font-size: 10px;
     font-weight: 600;
     color: #555;
-    max-width: 50%;
+    max-width: 58%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+/* Hybrid/mixed: semantic % on top, Magento value under it */
+.klizer-ai-card__cat--semantic {
+    top: 8px;
+    color: #5b21b6;
+    background: rgba(237, 233, 254, 0.96);
+}
+.klizer-ai-card__cat--magento {
+    top: 30px;
+    color: #444;
+    background: rgba(255, 255, 255, 0.95);
+    max-width: 70%;
+}
+.klizer-ai-card__media:has(.klizer-ai-card__cat--semantic):has(.klizer-ai-card__cat--magento) .klizer-ai-card__badge {
+    top: 8px;
 }
 .klizer-ai-card__badge {
     position: absolute;
